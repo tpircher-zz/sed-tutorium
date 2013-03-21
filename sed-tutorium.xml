@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding="UTF-8" ?>
 
 <!DOCTYPE book [
-        <!ENTITY docversion "1.9">
+        <!ENTITY docversion "1.10">
         <!ENTITY docdate    "März 2013">
 
         <!ENTITY sed        "<command>sed</command>">
@@ -88,6 +88,8 @@
         <para>
             Neue Versionen dieses Dokumentes können von
             <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://www.tty1.net/sed-tutorium_de.html">http://www.tty1.net/sed-tutorium_de.html</link> bezogen werden.
+            Der Quellcode ist nun auch auf
+            <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="https://github.com/tpircher/sed-tutorium">GitHub</link> gehostet.
         </para>
     </section>
     <section xml:id="sec-intro-was"><info><title>Was ist sed</title></info>
@@ -685,15 +687,21 @@ sed -e '10q'
             Das Flag '<literal>g</literal>' ersetzt <emphasis>alle</emphasis> Muster in einer Zeile, eine Nummer '<replaceable>n</replaceable>'
             veranlasst sed, das <replaceable>n</replaceable>-te übereinstimmende Muster zu ersetzen.
             <indexterm><primary>Kommando</primary><secondary>s</secondary><tertiary>Beispiel</tertiary></indexterm>
-            Mit dem Einzeiler <programlisting>sed -e '/ich/s/$1500/$3000/g' Gehaltsliste.dat</programlisting>
+            Mit dem Einzeiler <programlisting>sed -e '/ich/s/€1500/€3000/g' Gehaltsliste.dat</programlisting>
             kann man ein bisschen träumen.
             (Bei den Träumen wird es wohl bleiben, denn &sed; verändert die Datei nicht!)
             Wer jetzt denkt die Ausgabe mittels Ausgabeumleitung '&gt;' wieder auf die Eingabedatei umzuleiten,
             der wird sich schön wundern: die Datei ist dann nämlich leer.
-            Der richtige wenn auch umständliche Weg ist die Ausgabe in einen temporäre Datei umzuleiten und diese
-            dann auf den Namen der Quelldatei umzubenennen.
+        </para>
+        <tip>
+            Der richtige wenn auch umständliche Weg eine Datei mit &sed; zu verändern ist die Ausgabe in eine
+            temporäre Datei umzuleiten und diese dann auf den Namen der Quelldatei umzubenennen.
+            &gnused; kennt die Option <option>-i</option> welche das Programm veranlasst, die Eingabe-Datei
+            direkt (inline) zu editieren.
+        </tip>
+        <para>
             Noch nicht verstanden was das vorherige Beispiel gemacht hat? In der Zeile, die 'ich' enthält wird das
-            Gehalt von $1500 auf $3000 verdoppelt, alle anderen Zeilen werden unverändert ausgegeben.
+            Gehalt von €1500 auf €3000 verdoppelt, alle anderen Zeilen werden unverändert ausgegeben.
         </para>
         <para>
             Die folgende Zeile lässt die Ausgabe des Shell-Kommandos <command>ls</command> hingegen sehr 'l33t' aussehen:
@@ -879,7 +887,7 @@ Ernst Theodor Amadeus Hoffmann
 Theo Lingen
 </screen>
             die in die Form <literal>&lt;VORNAME&gt; [&lt;INITIAL ZWEITER NAME&gt;.] &lt;NACHNAME&gt;</literal> gebracht werden soll.
-            Dazu muss man erst die Regionen definieren:
+            Dazu muss man erst die Bereiche definieren:
             <programlisting>sed -e 's/^[^ ][^ ]* [[:alpha:]]..* [^ ][^ ]*$//'</programlisting>
             Nun gibt man um die gewünschten Zonen die Klammern und stellt sich das Ergebnis mit '\1' und '\2' und '\3' zusammen:
             <programlisting>sed -e 's/\(^[^ ][^ ]*\) \([[:alpha:]]\)..* \([^ ][^ ]*\)$/\1 \2. \3/'</programlisting>
@@ -962,6 +970,30 @@ s/..*/name: &amp;/
             Dieses Script löscht die erste Zeile, aber nur wenn sie mit '<literal>#!</literal>' beginnt.
             Es ist ein schönes Beispiel für die Kombination von mehreren Adressen.
         </para>
+    </section>
+    <section xml:id="sec-interessanter-eindeutige-kodierung"><info><title>Eindeutige Kodierung der Eingabe</title></info>
+        <para>
+            Gelegentlich will ein Script einfach nicht funktionieren, und man verbringt Stunden damit, zu rätseln
+            warum eine RE partout nicht auf eine Zeile passen will.
+            Manchmal liegt das an der Eingabe-Datei, nämlich wenn sie Zeichen enthält, die man sich nicht erwartet.
+            In solchen Fällen ist das Kommando '<literal>l</literal>' nützlich.
+            <indexterm><primary>Kommando</primary><secondary>l</secondary></indexterm>
+            Es gibt den &patspace; in einer eindeutigen Schreibweise (welche an <acronym>ANSI C</acronym> angelehnt ist)
+            auf den Bildschirm:
+<programlisting>echo "adressier	mich dоch! " | sed -n 'l'
+adressier\tmich d\320\276ch! $
+</programlisting>
+            Jetzt wird klar warum die Adresse '<literal>/^addressier mich doch!$/</literal>' nicht zur Eingabe passt:
+            erstens ist das Zeichen zwischen den ersten beiden Wörtern kein Leerzeichen sondern ein Tabluator,
+            zweitens ist das '<literal>о</literal>' im dritten Wort in kyrillisch kodiert, und drittens hat sich ein
+            Leerzeichen am Ende der Zeile eingeschlichen.
+        </para>
+        <note>
+            Das obige Beispiel ist möglicherweise nicht durch Copy&amp;Paste nachzuvollziehen, da Sonderzeichen
+            nicht immer korrekt kopiert werden. Wenn auf einem System das Programm <command>base64</command>
+            vorhanden ist, dann kann man das Beispiel mit der folgenden Eingabe nachvollziehen:
+<programlisting>echo YWRyZXNzaWVyCW1pY2ggZNC+Y2ghIAo= | base64 -d | sed -e 'l'</programlisting>
+        </note>
     </section>
 </chapter>
 
@@ -1213,12 +1245,12 @@ Meinst du?
         <indexterm><primary>Kommando</primary><secondary>a</secondary></indexterm>
         <indexterm><primary>Kommando</primary><secondary>i</secondary></indexterm>
         <indexterm><primary>Kommando</primary><secondary>c</secondary></indexterm>
-        <indexterm><primary>Kommando</primary><secondary>l</secondary></indexterm>
+        <indexterm><primary>Kommando</primary><secondary>w</secondary></indexterm>
         <para>
             &sed; kennt noch einige meines Erachtens recht exotische Befehle wie
             '<literal>a</literal>', '<literal>i</literal>' und '<literal>c</literal>', welche einen gegebenen Text
-            ausgeben oder '<literal>l</literal>', welcher nicht druckbare Zeichen im
-            &patspace; in ihrer <acronym>ANSI C</acronym>-Notation ausgibt und noch derer mehr.
+            ausgeben oder '<literal>w</literal>', welcher den &patspace; in eine Datei schreibt
+            und noch derer mehr.
             Sollten diese gebraucht werden, dann gibt die info-page bereitwillig Auskunft dazu.
         </para>
     </section>
@@ -1299,14 +1331,13 @@ Meinst du?
     </section>
 </chapter>
 
-<!-- FIXME bis hierher -->
 <chapter xml:id="sec-beispiele"><info><title>Ein paar Beispiele</title></info>
     <para>
         Diese Sektion sollte mehr Beispiele enthalten. Ich bin ständig auf der Suche nach Beispielen, welche zum
         Verständnis von &sed; beitragen.
         Sollte der Leser Scripte wissen, die mit noch nicht vorgestellten Tricks arbeiten, welche eines Kommentars bedürfen,
         einem ganze Mannjahre an Handarbeit ersparen, einfach nur schön sind oder irgend einen anderen
-        AHA!-Effekt auszulösen imstande sind, so bitte ich darum, mir diese zu schicken.
+        AHA!-Effekt auszulösen imstande sind, dann bitte ich darum, mir diese zu schicken.
         Sie werden mit Angabe des Autors hier veröffentlicht.
     </para>
     <para>
@@ -1318,12 +1349,17 @@ Meinst du?
     </para>
     <section xml:id="sec-vermischtes-nocomment"><info><title>Entfernen von Kommentaren</title></info>
         <para>
-            Die fiktiven Hochsprachen der 5. Generation <acronym>K</acronym> und <acronym>K++</acronym> kennen zwei Arten von Kommentaren.
+            Die fiktiven Programmiersprachen <acronym>K</acronym> und <acronym>K++</acronym> kennen zwei Arten von Kommentaren.
             Da wäre die nur in <acronym>K++</acronym> verwendete Art '<literal>kk.*</literal>' (zwei einleitende 'k'),
             oder die in beiden Sprachen verwendete Form '<literal>ko.*ok</literal>', wobei sich ein solcher
             Kommentar über mehrere Zeilen erstrecken kann. Es soll ein &sed;-Script erstellt werden,
             das solche Kommentare (warum auch immer!) entfernen soll.
         </para>
+        <note>
+            Soll das folgende Script für in den archaischen Sprachen <acronym>C/C++</acronym> geschriebene Programme funktionieren,
+            dann muss man es mit dem &sed;-(Pseudo-)Einzeiler
+            '<literal>sed -e '/^#/!{s/k/\//g;s/o/\*/g;}' k-kommentar &gt; c-kommentar</literal>' ummodeln.
+        </note>
         <para>
             Das Entfernen von <acronym>K</acronym>-Kommentaren benötigt ein paar Erklärungen.
             Nehmen wir einmal an, wir hätten den gesamten Kommentar im &patspace;.
@@ -1374,11 +1410,6 @@ s/ko\([^o]\|o\+[^ok]\)*o\+k//g
 
 t test
 </programlisting>
-        <para>
-            Soll das Script für in den archaischen Sprachen <acronym>C/C++</acronym> geschriebene Programme funktionieren,
-            dann muss man es mit dem &sed;-(Pseudo-)Einzeiler
-            '<literal>sed -e '/^#/!{s/k/\//g;s/o/\*/g;}' k-kommentar &gt; c-kommentar</literal>' ummodeln.
-        </para>
         <para>
             Ein K-Kommentar beginnt mit '<literal>ko</literal>', soweit ist alles klar.
             Anschließend folgt die längst mögliche Zeichenkette, die kein '<literal>ok</literal>' enthält.
@@ -1459,7 +1490,7 @@ t test
         <para>
             Übrigens kann man mit dem bekannten Editor vim einen K-Kommentar einfach durch
             <programlisting>K-Kommentar = ko.\{-}ok</programlisting>
-            definieren. Dabei bedeutet der Ausdruck <literal>.\{-}</literal>, dass ähnlich wie bei <literal>.*</literal>
+            definieren. Dabei bedeutet der Ausdruck <literal>.\{-}</literal>, dass, ähnlich wie bei <literal>.*</literal>,
             eine beliebige Zeichenkette gesucht ist, aber nicht längste, sondern die kürzeste.
         </para>
         <para>
@@ -1476,7 +1507,7 @@ t test
             <programlisting>sed -e 's/\([aeiou]\+\)l\1f\1/\1/g'</programlisting>
             Wenn man diesen Kniff nicht schon einmal gesehen hat, muss man 2 (ich 3) mal hinschauen um zu verstehen,
             warum das funktioniert. Was mir an diesem Beispiel so gut gefällt ist, dass sobald die Klammer
-            geschlossen wird, der Inhalt der eingeschlossenen Region schon in '<literal>\1</literal>' bereit steht
+            geschlossen wird, der Inhalt des eingeschlossenen Bereiches schon in '<literal>\1</literal>' bereit steht
             und somit verwendet werden kann - auch innerhalb der RE. Die RE wird somit zur Laufzeit
             verändert. Das zeigt einerseits wie leistungsfähig &sed; ist und andererseits
             dass es auch manchmal recht knifflig sein kann die Scripte anderer zu verstehen.
@@ -1518,9 +1549,9 @@ t test
         <indexterm><primary>Adresse</primary></indexterm>
         <para>
             &sed; kann mehrere Dateien abarbeiten, wenn man diese als Argumente übergibt.
-            Diese Dateien werden als ein einziger input-stream behandelt.
+            Diese Dateien werden als ein einziger Input-Stream behandelt.
             Achtung deshalb bei Zeilenangaben. Die Adresse '<literal>1</literal>' gibt deshalb nicht die erste Zeile in jeder Datei an,
-            sondern die erste Zeile im input-stream; der nachfolgende Befehl wird also nur einmal ausgeführt.
+            sondern die erste Zeile im Input-Stream; der nachfolgende Befehl wird also nur einmal ausgeführt.
             <table xml:id="adressen" frame="topbot" pgwide="0"><info><title>Adressen</title></info>
             <tgroup cols="2" align="left" colsep="0" rowsep="0">
             <colspec colnum="1" colname="col1" colwidth="1*"/>
@@ -1539,14 +1570,14 @@ t test
                     <entry><literal>$</literal>
                         <indexterm><primary>Adresse</primary><secondary>$</secondary></indexterm>
                     </entry>
-                    <entry>Letzte Zeile im input-stream.</entry>
+                    <entry>Letzte Zeile im Input-Stream.</entry>
                 </row>
                 <row>
                     <entry><literal>/<replaceable>regex</replaceable>/</literal>
                         <indexterm><primary>Adresse</primary><secondary><literal>/<replaceable>regex</replaceable>/</literal></secondary></indexterm>
                     </entry>
                     <entry>Alle Zeilen, auf die <replaceable>regex</replaceable> passt.
-                        Alternativ kann auch '\%<replaceable>regex</replaceable>\%' geschrieben werden, wobei '<literal>%</literal>' ein beliebiges Zeichen ist.</entry>
+                        Alternativ kann auch '\%<replaceable>regex</replaceable>%' geschrieben werden, wobei '<literal>%</literal>' ein beliebiges Zeichen ist.</entry>
                 </row>
                 <row>
                     <entry><literal><replaceable>adresse1</replaceable>,<replaceable>adresse2</replaceable></literal>
@@ -1590,7 +1621,7 @@ t test
                 <row>
                     <entry><literal>=</literal><indexterm><primary>Kommando</primary><secondary>=</secondary></indexterm></entry>
                     <entry>0-1</entry>
-                    <entry>Schreibt die aktuelle Position im Input-stream.</entry>
+                    <entry>Gibt die aktuelle Position im Input-stream aus.</entry>
                 </row>
                 <row>
                     <entry><literal>q</literal><indexterm><primary>Kommando</primary><secondary>q</secondary></indexterm></entry>
@@ -1600,7 +1631,7 @@ t test
                 <row>
                     <entry><literal>l</literal><indexterm><primary>Kommando</primary><secondary>l</secondary></indexterm></entry>
                     <entry>0-2</entry>
-                    <entry>Schreibt den &patspace; in C-Notation.</entry>
+                    <entry>Gibt den &patspace; in einer unmissverständlichen Form aus, die die <acronym>ANSI C\</acronym>-Screibweise angelehnt is. Sehr nützlich zur Fehlersuche.</entry>
                 </row>
                 <row>
                     <entry><literal>d</literal><indexterm><primary>Kommando</primary><secondary>d</secondary></indexterm></entry>
@@ -1641,7 +1672,7 @@ t test
                 <row>
                     <entry><literal>: <replaceable>label</replaceable></literal><indexterm><primary>Kommando</primary><secondary>:</secondary></indexterm></entry>
                     <entry>0</entry>
-                    <entry>definiert das Sprungziel <replaceable>label</replaceable>. Siehe Kommandos <literal>b</literal> oder <literal>t</literal>, wie man Labels anspringt.</entry>
+                    <entry>Definiert das Sprungziel <replaceable>label</replaceable>. Siehe Kommandos <literal>b</literal> oder <literal>t</literal>, wie man Labels anspringt.</entry>
                 </row>
                 <row>
                     <entry><literal>b <replaceable>label</replaceable></literal><indexterm><primary>Kommando</primary><secondary>b</secondary></indexterm></entry>
@@ -1672,7 +1703,7 @@ t test
                 <row>
                     <entry><literal>N</literal><indexterm><primary>Kommando</primary><secondary>N</secondary></indexterm></entry>
                     <entry>0-2</entry>
-                    <entry>Hängt eine newline an den &patspace; an, gefolgt von der nächsten Zeile des inputs. Ist das Ende der Datei erreicht, wird das Programm abgebrochen, ohne weitere Befehle abzuarbeiten.</entry>
+                    <entry>Hängt eine newline an den &patspace; an, gefolgt von der nächsten Zeile des Inputs. Ist das Ende der Datei erreicht, wird das Programm abgebrochen, ohne weitere Befehle abzuarbeiten.</entry>
                 </row>
                 <row>
                     <entry><literal>P</literal><indexterm><primary>Kommando</primary><secondary>N</secondary></indexterm></entry>
@@ -1710,10 +1741,9 @@ t test
             <indexterm><primary>Kommando</primary><secondary>a</secondary></indexterm>
             <indexterm><primary>Kommando</primary><secondary>i</secondary></indexterm>
             <indexterm><primary>Kommando</primary><secondary>c</secondary></indexterm>
-            <indexterm><primary>Kommando</primary><secondary>l</secondary></indexterm>
             <indexterm><primary>Kommando</primary><secondary>r</secondary></indexterm>
             <indexterm><primary>Kommando</primary><secondary>w</secondary></indexterm>
-            Daneben gibt es noch weitere Befehle wie <literal>a</literal>, <literal>i</literal>, <literal>c</literal>, <literal>l</literal>,
+            Daneben gibt es noch weitere Befehle wie <literal>a</literal>, <literal>i</literal>, <literal>c</literal>,
             <literal>r</literal>, <literal>w</literal>. Der Leser sei diesbezüglich  mit einem freundlichen RTFM auf die man-page verwiesen.
         </para>
     </section>
@@ -1721,6 +1751,12 @@ t test
 
 <chapter xml:id="sec-history"><info><title>Versionsgeschichte</title></info>
     <revhistory>
+        <revision>
+            <revnumber>1.10</revnumber>
+            <date>2013-03-21</date>
+            <authorinitials>thp</authorinitials>
+            <revremark>Beschreibung des Kommandos 'l'. Das Tutorium ist nun auch auf GitHub.</revremark>
+        </revision>
         <revision>
             <revnumber>1.9</revnumber>
             <date>2013-03-03</date>

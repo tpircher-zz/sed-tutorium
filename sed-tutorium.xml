@@ -1,0 +1,1844 @@
+<?xml version='1.0' encoding="UTF-8" ?>
+
+<!DOCTYPE book [
+        <!ENTITY docversion "1.9">
+        <!ENTITY docdate    "März 2013">
+
+        <!ENTITY sed        "<command>sed</command>">
+        <!ENTITY gnused     "<acronym>GNU</acronym>&nbsp;<command>sed</command>">
+        <!ENTITY stdin      "<filename class='devicefile'>stdin</filename>">
+        <!ENTITY stdout     "<filename class='devicefile'>stdout</filename>">
+        <!ENTITY stderr     "<filename class='devicefile'>stderr</filename>">
+        <!ENTITY patspace   "<emphasis>pattern space</emphasis>">
+        <!ENTITY holdspace  "<emphasis>hold space</emphasis>">
+
+        <!ENTITY nbsp       "&#160;">
+]>
+
+<book xml:id="sed-tutorium" xmlns="http://docbook.org/ns/docbook" version="5.0" xml:lang="de">
+<info>
+    <title>&sed; Tutorium</title>
+    <subtitle>Eine Einführung in &sed;</subtitle>
+    <pubdate>&docdate;, v&docversion;</pubdate>
+    <copyright>
+        <year>2001-2013</year>
+        <holder>Thomas Pircher</holder>
+    </copyright>
+
+    <author>
+        <personname>
+            <firstname>Thomas</firstname>
+            <surname>Pircher</surname>
+        </personname>
+        <affiliation>
+            <orgname><link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://www.tty1.net/sed-tutorium_de.html">http://www.tty1.net/sed-tutorium_de.html</link></orgname>
+            <address><email>tehpeh@gmx.net</email></address>
+        </affiliation>
+    </author>
+
+    <legalnotice>
+        <para>
+            Dieses Dokument steht unter der
+            <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://creativecommons.org/licenses/by-sa/3.0/">Creative Commons Attribution-Share Alike 3.0 Unported Lizenz</link>.
+        </para>
+    </legalnotice>
+
+    <keywordset>
+        <keyword>sed</keyword>
+        <keyword>german</keyword>
+        <keyword>deutsch</keyword>
+        <keyword>einfuehrung</keyword>
+        <keyword>einführung</keyword>
+        <keyword>tutorium</keyword>
+        <keyword>tutorial</keyword>
+        <keyword>tools</keyword>
+        <keyword>shell utilities</keyword>
+    </keywordset>
+</info>
+
+
+<chapter xml:id="sec-intro"><info><title>Einführung</title></info>
+    <para>
+        Seit ich mir ein bisschen Zeit genommen habe mich in &sed; einzuarbeiten,
+        hat dieses Tool mir sehr viele Aufgaben erleichtert.
+        Es ist unglaublich, wie flexibel dieses Programm einsetzbar ist und welche komplexen Regeln man
+        mit ein paar Zeichenkombinationen aufstellen kann, die für den Laien nur wie ein beliebiges
+        Gekrösel von Hieroglyphen ausschauen.
+        Außerdem macht es einfach Spaß, eigene Scripte zu erstellen oder die von anderen Leuten zu verstehen.
+        Mit dieser Einführung will ich Lust auf &sed; machen und ich hoffe dass die
+        Einarbeitung in das Programm nicht zur Frust ausartet.
+    </para>
+    <section xml:id="sec-intro-ueber"><info><title>Über dieses Tutorium</title></info>
+        <para>
+            Ich bin kein &sed;-Guru, deshalb könnte manches Problem sicher mit weniger Kommandos gelöst werden.
+            Das ist aber nicht der Sinn dieser Einführung die versucht die Beispiele so nachvollziehbar wie nur möglich zu halten.
+            Ich bin aber dankbar für jedes Feedback, für Anregungen, Kritik, Fehlermeldungen, Verbesserungsvorschläge
+            und Blankoschecks.
+            Sollte diese Einführung gefallen, dann sind auf der Seite
+            <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://www.tty1.net/say-thanks_de.html">http://www.tty1.net/say-thanks_de.html</link>
+            ein paar Ideen aufgelistet, um sich erkenntlich zu zeigen.
+        </para>
+        <para>
+            Die hier vorgestellten Scripte wurden in der Regel getestet, doch kann ich nicht ausschließen,
+            dass sich doch hie und da einige Fehler eingeschlichen haben
+            In diesem Fall bitte nicht meckern sondern melden. Für Fragen stehe ich gerne zur Verfügung.
+            Einfach eine E-Mail an die auf der ersten Seite angegebene Adresse schicken und in der Betreff-Zeile
+            '<emphasis>sed-tutorium</emphasis>' unterbringen.
+        </para>
+        <para>
+            Neue Versionen dieses Dokumentes können von
+            <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://www.tty1.net/sed-tutorium_de.html">http://www.tty1.net/sed-tutorium_de.html</link> bezogen werden.
+        </para>
+    </section>
+    <section xml:id="sec-intro-was"><info><title>Was ist sed</title></info>
+        <para>
+            &sed; wurde 1973 oder 1974 von Lee E. McMahon geschrieben
+            (mehr zur Geschichte der frühen <acronym>UNIX</acronym>-Kommandos
+            <indexterm><primary>Geschichte von &sed;</primary></indexterm>
+            <indexterm><primary>&sed;</primary><secondary>Geschichte von</secondary></indexterm>
+            auf <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://www.columbia.edu/~rh120/ch106.x09">http://www.columbia.edu/~rh120/ch106.x09</link>).
+            Trotz seines Alters wird &sed; immer noch verwendet, da es ein weites Spektrum von
+            einfachen bis sehr komplexen Aufgaben erledigen kann.
+            Die Stärke von <acronym>UNIX</acronym> liegt zum Teil auch darin, dass es über kleine
+            hochspezialisierte Tools verfügt die, miteinander kombiniert, fast jede Aufgabe lösen können.
+        </para>
+        <para>
+            Der Name &sed; steht für Stream EDitor, was andeuten soll, dass das Programm kein Editor
+            im gewöhnlichen Sinn ist, sondern Zeile für Zeile von einer Eingabedatei oder der Tastatur in einen Zwischenspeicher
+            (&patspace;<indexterm><primary>Pattern space</primary></indexterm>) einliest
+            wo sie nach den Anweisungen im Script bearbeitet werden.
+            Anschließend wird der bearbeitete &patspace; auf &stdout; (standard output, meistens der Bildschirm), ausgegeben.
+            Die Quelldatei bleibt dabei unverändert.
+        </para>
+        <para>
+            Zur Verdeutlichung der Arbeitsweise von &sed; hier ein kleines Beispiel:
+            <programlisting>sed -e '/ignore/d'</programlisting>
+            <indexterm><primary>Kommando</primary><secondary>d</secondary><tertiary>Beispiel</tertiary></indexterm>
+            Die Option <option>-e</option><indexterm><primary>Option</primary><secondary><option>-e</option></secondary></indexterm>
+            erwirkt dass &sed; das darauf folgende Argument als Script behandelt, und nicht etwa als Eingabedatei.
+            Das eigentliche (an dieser Stelle nicht weiter erklärte) Script ist in Gänsefüßchen angegeben.
+        </para>
+        <note>
+            Wird &sed;, wie im obigen Beispiel, ohne Angabe einer Eingabedatei aufgerufen, dann wird die Eingabe von
+            &stdin; (in diesem Fall von der Tastatur) eingelesen.
+            Zum Beenden des Programms drückt man <keycap>^D</keycap> (<keysym>CTRL</keysym> und <keycap>D</keycap>)
+            was unter <acronym>UNIX</acronym> für Dateiende steht.
+            Unter Windows muss man <keycap>^Z</keycap> gefolgt von <keycap>&lt;Enter&gt;</keycap> eingeben.
+        </note>
+        <para>
+            Wenn das Programm gestartet wird, können auf der Tastatur nun Zeichen eingegeben werden, und sobald
+            das Zeilenende eingegeben wird, beginnt &sed; diese Zeile zu bearbeiten.
+            In obigem Beispiel wird jede Zeile auf dem Bildschirm ausgegeben, es sei denn, sie enthält den String 'ignore'.
+        </para>
+    </section>
+    <section xml:id="sec-intro-programm"><info><title>Das Programm</title></info>
+        <para>
+            Bedingt durch die weite Verbreitung von &sed; gibt es eine Reihe von Implementationen,
+            die sich in einigen Details unterscheiden.
+            Dieses Tutorium versucht, sich so weit als möglich an die standardisierte Version von &sed; zu halten.
+            Dem Autor liegt &gnused; vor, und alle Beispiele wurden damit getestet.
+            Im Text wird aber jeweils darauf hingewiesen, wenn Erweiterungen verwendet werden.
+            Auf Pements <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://sed.sourceforge.net/sedfaq.html">sedfaq</link> findet sich eine erschöpfende
+            Liste der verschiedenen &sed;-Implementationen und deren Unterschiede.
+        </para>
+        <para>
+            Eine gute Hersteller-unabhängige Dokumentation stellt die
+            <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://www.opengroup.org/onlinepubs/007908799/xcu/sed.html">Open Group</link> bereit.
+        </para>
+    </section>
+    <section xml:id="sec-intro-doc"><info><title>Dokumentationen</title></info>
+        <para>
+            Zu nennen ist natürlich die man-page zu &sed;, die aber eher erfahrenen Benutzer zu empfehlen ist.
+            Ausführlicher und systematischer ist die <emphasis>info</emphasis> page zu sed.
+            Damit sollte man nach der Lektüre dieser Einführung keine Probleme mehr haben.
+        </para>
+        <para>
+            Eine Sammlung interessanter Fragen rund um &sed;, inklusive vieler Scripte sowie eine nicht enden wollende
+            Liste von weiterführenden Links findet man auf <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://sed.sourceforge.net/">&sed; $HOME</link>.
+            Besonders hinweisen möchte ich auf die dort enthaltene
+            <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://sed.sourceforge.net/sedfaq.html">sedfaq</link> von Eric Pement.
+            Das Tutorial von Carlos Jorge Duarte (<link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://sed.sourceforge.net/grabbag/tutorials/do_it_with_sed.txt">do it with sed</link>)
+            ist sehr lesenswert, besonders wegen der vielen sehr gut dokumentierten und zum Teil trickreichen Scripte.
+            Wer keine Dokumentation zu &sed; hat, findet in dem File eine kurze aber durchaus brauchbare Referenz.
+            Sehr gut ist auch <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="ftp://ftp.cs.umu.se/pub/pc/u-sedit2.zip">u-sedit</link> von Mike Arst,
+            welches ein Tutorial und jede Menge Beispiele beinhaltet.
+        </para>
+        <para>
+            Spezifische Fragen (sofern nicht in den FAQs behandelt) kann man auch in den
+            <emphasis>dafür zuständigen</emphasis> Newsgroups stellen.
+            Man bekommt dort meistens eine fundierte und ausführliche Antwort - eine treffende Beschreibung des Problems
+            und die Befolgung der jeweiligen Netiquette seitens des Fragenden vorausgesetzt.
+            Eine zuständige deutschsprachige Newsgruppe könnte beispielsweise
+            <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="news:de.comp.os.unix.shell">news:de.comp.os.unix.shell</link> sein.
+        </para>
+    </section>
+</chapter>
+
+
+<chapter xml:id="sec-grundlagen"><info><title>Grundlagen</title></info>
+    <section xml:id="sec-grundlagen-re"><info><title>Reguläre Ausdrücke</title></info>
+        <indexterm><primary>Regular Expression</primary><secondary>Beispiele</secondary></indexterm>
+        <para>
+            Reguläre Ausdrücke (Regular Expressions, REs) wurden von 1956 S.C. Kleene eingeführt
+            und sie erwiesen sich als sehr effektiv, um Zeichenketten zu beschreiben.
+        </para>
+        <para>
+            REs werden dann verwendet, wenn man die <emphasis>Form</emphasis> einer Zeichenkette (String) angeben will;
+            sie beschreiben also <emphasis>Klassen</emphasis> von Strings.
+            Es ist zum Beispiel einfacher die <emphasis>natürlichen Zahlen</emphasis> als "eine Zeichenkette,
+            bestehend aus einer oder mehreren Ziffern aus der Menge {0,1,2,3,4,5,6,7,8,9}" zu definieren,
+            als alle Zahlen von 0 bis unendlich aufzuzählen.
+            Mit Hilfe von Regulären Ausdrücken kann man solche Klassen von Strings eindeutig beschreiben.
+        </para>
+        <para>
+            Man sagt eine RE passt auf eine Zeichenkette, wenn diese in der von der RE umrissenen Klasse enthalten ist.
+            Häufig werden REs verwendet, um aus einem String einen Teilstring heraus zu picken,
+            welcher von der RE beschrieben ist. Dabei gilt das Prinzip der längsten
+            Übereinstimmung (<emphasis>longest match</emphasis>), was heißen soll dass dies der längste Teilstring ist,
+            auf den die RE passt. In diesem Zusammenhang spricht man auch davon, REs sind gefräßig (<emphasis>greedy</emphasis>).
+        </para>
+        <para>
+        <table xml:id="regex"><info><title>Erweiterte Reguläre Ausdrücke (Extended Regular Expressions)</title></info>
+        <tgroup cols="2" align="left" colsep="0" rowsep="0">
+        <colspec colnum="1" colname="col1" colwidth="1*"/>
+        <colspec colnum="2" colname="col2" colwidth="3*"/>
+        <thead>
+            <row>
+                <entry>Regulärer Ausdruck</entry>
+                <entry>Erklärung</entry>
+            </row>
+        </thead>
+        <tbody>
+            <row>
+                <entry><literal>x</literal></entry>
+                <entry>das Zeichen '<literal>x</literal>'</entry>
+            </row>
+            <row>
+                <entry><literal>\x</literal></entry>
+                <entry>Escape: wenn das Zeichen nach dem <literal>\</literal> eines eines der folgenden ist: <literal>{a, b, f, n, r, t, v}</literal>
+                    dann wird es als Spezielles Zeichen gemäß <acronym>ANSI C</acronym> interpretiert. Zum Beispiel '<literal>\n</literal>'
+                    für einen Zeilenumbruch.
+                    Jedes andere <literal>x</literal> verliert seine Sonderbedeutung (falls es eine hat) und wird als einfaches Zeichen interpretiert,
+                    z.B. <literal>\*</literal> wird als Stern interpretiert und nicht als Quantifikator.
+                    <indexterm><primary>Regular Expression</primary><secondary>escape</secondary></indexterm>
+                </entry>
+            </row>
+            <row>
+                <entry><literal>\123</literal></entry>
+                <entry>das Zeichen mit oktalem ASCII-Code 123</entry>
+            </row>
+            <row>
+                <entry><literal>\xe5</literal></entry>
+                <entry>das Zeichen mit hexadezimalem ASCII-Code e5</entry>
+            </row>
+            <row>
+                <entry><literal>.</literal></entry>
+                <entry>jedes beliebige Zeichen außer <literal>\n</literal> (newline)
+                    <indexterm><primary>Regular Expression</primary><secondary><literal>.</literal></secondary></indexterm>
+                </entry>
+            </row>
+            <row>
+                <entry><literal>[<replaceable>xyz</replaceable>]</literal></entry>
+                <entry>eine "character class": <replaceable>x</replaceable> ODER <replaceable>y</replaceable> ODER <replaceable>z</replaceable>
+                    <indexterm><primary>Regular Expression</primary><secondary><literal>[<replaceable>xyz</replaceable>]</literal></secondary></indexterm>
+                    <indexterm><primary>Regular Expression</primary><secondary>character class</secondary></indexterm>
+                </entry>
+            </row>
+            <row>
+                <entry><literal>[<replaceable>ako</replaceable>-<replaceable>sP</replaceable>]</literal></entry>
+                <entry>eine "character class" mit einer Bereichsangabe, also <replaceable>a</replaceable> ODER <replaceable>k</replaceable>
+                    ODER ein Character aus dem Bereich <replaceable>o</replaceable> BIS <replaceable>s</replaceable> ODER
+                    <replaceable>P</replaceable>
+                </entry>
+            </row>
+            <row>
+                <entry><literal>[^<replaceable>x</replaceable>-<replaceable>z</replaceable>]</literal></entry>
+                <entry>eine "negated character class": Jedes Zeichen außer <replaceable>x</replaceable> bis <replaceable>z</replaceable>
+                    <indexterm><primary>Regular Expression</primary><secondary><literal>[^<replaceable>x</replaceable>-<replaceable>z</replaceable>]</literal></secondary></indexterm>
+                </entry>
+            </row>
+            <row>
+                <entry><literal>(<replaceable>r</replaceable>)</literal></entry>
+                <entry>die RE <replaceable>r</replaceable> selber
+                    <indexterm><primary>Regular Expression</primary><secondary><literal>(<replaceable>r</replaceable>)</literal></secondary></indexterm>
+                </entry>
+            </row>
+            <row>
+                <entry><replaceable>rs</replaceable></entry>
+                <entry>die RE <replaceable>r</replaceable> gefolgt von der RE <replaceable>s</replaceable></entry>
+            </row>
+            <row>
+                <entry><literal><replaceable>r</replaceable>|<replaceable>s</replaceable></literal></entry>
+                <entry>die RE <replaceable>r</replaceable> ODER die RE <replaceable>s</replaceable>
+                    <indexterm><primary>Regular Expression</primary><secondary><literal><replaceable>r</replaceable>|<replaceable>s</replaceable></literal></secondary></indexterm>
+                </entry>
+            </row>
+            <row>
+                <entry><literal><replaceable>r</replaceable>*</literal></entry>
+                <entry>die RE <replaceable>r</replaceable> null oder mehrere male
+                    <indexterm><primary>Regular Expression</primary><secondary><literal><replaceable>r</replaceable>*</literal></secondary></indexterm>
+                </entry>
+            </row>
+            <row>
+                <entry><literal><replaceable>r</replaceable>+</literal></entry>
+                <entry>die RE <replaceable>r</replaceable> ein oder mehrere male
+                    <indexterm><primary>Regular Expression</primary><secondary><literal><replaceable>r</replaceable>+</literal></secondary></indexterm>
+                </entry>
+            </row>
+            <row>
+                <entry><literal><replaceable>r</replaceable>?</literal></entry>
+                <entry>die RE <replaceable>r</replaceable> null oder ein mal
+                    <indexterm><primary>Regular Expression</primary><secondary><literal><replaceable>r</replaceable>?</literal></secondary></indexterm>
+                </entry>
+            </row>
+            <row>
+                <entry><literal><replaceable>r</replaceable>{<replaceable>2</replaceable>,</literal><replaceable>6</replaceable><literal>}</literal></entry>
+                <entry>die RE <replaceable>r</replaceable> zwei bis sechs mal
+                    <indexterm><primary>Regular Expression</primary><secondary><literal>{<replaceable>a</replaceable>,<replaceable>b</replaceable>}</literal></secondary></indexterm>
+                </entry>
+            </row>
+            <row>
+                <entry><literal><replaceable>r</replaceable>{<replaceable>2</replaceable>,}</literal></entry>
+                <entry>die RE <replaceable>r</replaceable> zwei oder mehrere male</entry>
+            </row>
+            <row>
+                <entry><literal><replaceable>r</replaceable>{,<replaceable>6</replaceable>}</literal></entry>
+                <entry>die RE <replaceable>r</replaceable> null bis sechs mal</entry>
+            </row>
+            <row>
+                <entry><literal><replaceable>r</replaceable>{<replaceable>4</replaceable>}</literal></entry>
+                <entry>die RE <replaceable>r</replaceable> genau vier mal</entry>
+            </row>
+            <row>
+                <entry><literal>^<replaceable>r</replaceable></literal></entry>
+                <entry>die RE <replaceable>r</replaceable> am Anfang der Zeile
+                    <indexterm><primary>Regular Expression</primary><secondary><literal><replaceable>r</replaceable>^</literal></secondary></indexterm>
+                </entry>
+            </row>
+            <row>
+                <entry><literal><replaceable>r</replaceable>$</literal></entry>
+                <entry>die RE <replaceable>r</replaceable> am Ende der Zeile
+                    <indexterm><primary>Regular Expression</primary><secondary><literal><replaceable>r</replaceable>$</literal></secondary></indexterm>
+                </entry>
+            </row>
+            <row>
+                <entry><literal>[:<replaceable>str</replaceable>:]</literal></entry>
+                <entry>mit <replaceable>str</replaceable> eine der folgenden Bezeichner:
+                    <literal>alnum</literal>, <literal>alpha</literal>, <literal>blank</literal>, <literal>cntrl</literal>,
+                    <literal>digit</literal>, <literal>graph</literal>, <literal>lower</literal>, <literal>print</literal>,
+                    <literal>punct</literal>, <literal>space</literal>, <literal>upper</literal>, <literal>xdigit</literal>
+                    dann die betreffende Charakterklasse. Siehe <emphasis>ctype(3)</emphasis> für Details.
+                </entry></row>
+        </tbody></tgroup></table>
+        Für detailliertere Informationen siehe die man-page <emphasis>regex(7)</emphasis> oder,
+        falls nicht vorhanden die man-page zu <emphasis>awk(1)</emphasis>, welche lange Zeit auch als die Referenz für REs galt,
+        oder <emphasis>flex(1)</emphasis> oder die
+        <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://www.opengroup.org/onlinepubs/007908799/xbd/re.html">Online-Dokumentation der Open Group</link>.
+        <indexterm><primary>awk</primary></indexterm>
+        <indexterm><primary>flex</primary></indexterm>
+        <indexterm><primary>Open Group</primary></indexterm>
+        </para>
+
+        <section xml:id="sec-grundlagen-bre"><info><title>Basic Regular Expressions</title></info>
+            <indexterm><primary>Regular Expression</primary><secondary>Basic Regular Expression</secondary></indexterm>
+            <para>&sed; verwendet <emphasis>Basic</emphasis> Regular Expressions, eine Art Untermenge der oben vorgestellten
+            Erweiterten Regulären Ausdrücke. Die Unterschiede zu den Erweiterten Regulären Ausdrücken sind:
+            <itemizedlist>
+                <listitem>
+                    <para>
+                    Die Quantifikatoren '<literal>|</literal>', '<literal>+</literal>' und '<literal>?</literal>' sind normale Zeichen,
+                    und es gibt keine äquivalenten Operatoren dafür.
+                    &gnused; kennt diese Operatoren, wenn sie durch einen vorangestellten Backslash "escaped" werden.
+                    <indexterm><primary>&gnused;</primary></indexterm>
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>Die geschwungenen Klammern sind normale Zeichen, und müssen mit Backslashes "escaped" werden,
+                    werden also als '<literal>\{</literal>' und '<literal>\}</literal>' geschrieben.
+                    Das selbe gilt für runde Klammern; die Zeichen, die durch '<literal>\(</literal>' und '<literal>\)</literal>'
+                    eingeschlossen werden, können später mit '<literal>\1</literal>' usw. dereferenziert werden.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                    '<literal>^</literal>' ist ein normales Zeichen, wenn es nicht am Beginn einer Zeile oder eines Klammerausdrucks steht.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                    '<literal>$</literal>' ist ein normales Zeichen, wenn es nicht am Ende einer Zeile oder eines Klammerausdrucks steht.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                    '<literal>*</literal>' ist ein normales Zeichen am Beginn einer Zeile oder eines Klammerausdrucks.
+                    </para>
+                </listitem>
+            </itemizedlist>
+            </para>
+        </section>
+        <section xml:id="sec-grundlagen-beisp"><info><title>Reguläre Beispiele</title></info>
+            <para>
+                Die Menge der Natürlichen Zahlen kann man mit einer Basic Regular Expression wie folgt umschreiben:
+                <indexterm><primary>Natürliche Zahlen</primary></indexterm>
+                '<literal>[0-9][0-9]*</literal>'. Die einfachere RE '<literal>[0-9]*</literal>' passt zwar auch auf die
+                natürlichen Zahlen, aber auch auf einen leeren String der keine Ziffer enthält:
+                der Quantifikator '<literal>*</literal>' steht für null oder mehrere male.
+                Die Bereichsklasse '<literal>[0-9]</literal>' hätte auch als '<literal>[[:digit:]]</literal>' geschrieben werden können
+                und mit Extended REs kann man ein paar Zeichen sparen indem man den '<literal>+</literal>'-Quantifikator verwendet: '<literal>[0-9]+</literal>'.
+            </para>
+
+            <para>
+                Hier ein berühmtes Shakespearezitat in Nerd-Schreibweise:
+                <programlisting>(bb|[^b]{2})</programlisting>
+                Diese RE passt auf Strings, die entweder aus zwei 'b' bestehen oder aus zwei Zeichen verschieden von 'b'.
+                Auf Englisch liest sich das in etwa als "two b or not two b" (sprich: to be or not to be).
+            </para>
+            <para>
+                Streng genommen liest sich die RE '<literal>(bb|[^b]{2})</literal>' als "two b and two not b".
+                Gönnen wir uns die dichterische Freiheit und lassen die RE trotzdem als Shakespearezitat durchgehen.
+            </para>
+
+            <tip>
+                <para>
+                    Eine Reihe von Programmen helfen die ersten Experimente mit Regulären Ausdrücken zu erleichtern.
+                    pcretest (enthalten in der PCRE library) ist eines davon, oder kregexpeditor, mit grafischer Benutzeroberfläche für KDE.
+                    Aber es geht auch einfach mit &sed;. Das folgende Script-Gerüst schreibt alle Zeilen, auf die ein Regulärer Ausdruck
+                    passen, auf den Bildschirm (der String 'RE' muss durch den gewünschten Regulären Ausdruck ersetzt werden):
+                    <programlisting>sed -ne '/RE/p'</programlisting>
+                    Wenn man 'interaktiv' mit &sed; arbeitet, also wenn Ein- und Ausgabe mit Tastatur und Bildschirm erfolgen (so wie im obigen Beispiel)
+                    dann sieht man sowohl Eingabe als auch Ausgabe auf dem Bildschirm.
+                    Das bedeutet, dass Zeilen, die nicht auf die RE passen, einmal am Bildschirm auftauchen (als Eingabe).
+                    Zeilen die hingegen auf die RE passen, erscheinen zweimal (einmal als Eingabe, einmal als Ausgabe).
+                </para>
+                <para>
+                    Das folgende Beispiel schreibt alle Zeilen mit mindestens einer Ziffer auf den Bildschirm:
+                    <programlisting>sed -ne '/[0-9]/p'</programlisting>
+                </para>
+                <para>
+                    Dieses Beispiel schreibt alle Zeilen die den String "Rumpelstilzchen" enthalten auf den Bildschirm:
+                    <programlisting>sed -ne '/Rumpelstilzchen/p'</programlisting>
+                </para>
+            </tip>
+            <tip>
+                <para>
+                    &sed; kennt nur Basic Regular Expressions, aber das weit verbreitete &gnused; ist in der Lage,
+                    Extended REs auszuführen, wenn man die Option '<option>-r</option>' angibt.
+                    <indexterm><primary>Option</primary><secondary><option>-r</option></secondary></indexterm>
+                    <indexterm><primary>&gnused;</primary></indexterm>
+                </para>
+            </tip>
+
+            <!-- weitere Beispiele -->
+
+            <para>
+                Reguläre Ausdrücke sind sehr flexibel und sehr oft kann man ein gewünschtes Ergebnis auf mehreren
+                verschiedenen Wegen erreichen.
+                So ist zum Beispiel die Extended RE '<literal>(x|y|z)</literal>' äquivalent zu '<literal>[xyz]</literal>' und
+                '<literal>(a|b)</literal>' ist äquivalent zu '<literal>(b|a)</literal>'.
+            </para>
+            <para>
+                Die RE '<literal>[FB]all</literal>' passt sowohl auf "Fall" als auch auf "Ball".
+                Das selbe Ergebnis könnte mit einer Extended RE zum Beispiel auch so erreicht werden:
+                '<literal>(F|B)al{2}</literal>'.
+            </para>
+            <para>
+                Die RE '<literal>^#.*</literal>' passt auf alle Zeilen, die mit einem '<literal>#</literal>' anfangen.
+                Ist die deutlich kürzere RE '<literal>^#</literal>' äquivalent zur vorhergehenden?
+                Zur reinen Mustersuche passen beide REs auf die selben Zeilen, der Unterschied kommt dann zu Tage,
+                wenn man die gefundenen Muster weiterverarbeiten will.
+                Erstere RE benennt die ganze Zeile, vom Beginn bis zum newline,
+                zweitere benennt nur das Zeichen '<literal>#</literal>' am Anfang der Zeile.
+            </para>
+        </section>
+        <section xml:id="sec-grundlagen-grenzen"><info><title>Grenzen von REs</title></info>
+            <indexterm><primary>Regular Expression</primary><secondary>Grenzen von</secondary></indexterm>
+            <para>
+                Mit REs lassen sich nicht alle Zeichenketten beschreiben.
+                Es ist zum Beispiel unmöglich ein System von balancierten Klammern zu beschreiben, auch ist die
+                Menge {wcw | w ist ein String bestehend aus 'a's und 'b's} als RE nicht auszudrücken.
+                Mehr zu REs kann man im 'Drachenbuch', <emphasis>Compilers - Principles, Techniques and Tools</emphasis> von Aho, Sethi und Ullman nachlesen.
+            </para>
+            <para>
+                REs können sehr schnell unleserlich werden.
+                Eine Gleitkommazahl wie 3.675E-15 kann man mit '<literal>[[:digit:]]+\.[[:digit:]]*([eE][+-]?[[:digit:]]+)?</literal>' beschreiben.
+                Zu beachten ist der Backslash '<literal>\</literal>' vor dem Punkt, da jener eine Sonderbedeutung hat,
+                die mit dem vorangestellten '<literal>\</literal>' unterbunden wird.
+                Leider hat diese Beschreibung einen Nachteil: sie passt zwar auf die Zahl '1.', aber nicht auf die Zahl '.1',
+                also noch einmal: '<literal>(([[:digit:]]+\.[[:digit:]]*)|(\.[[:digit:]]+))([eE][+-]?[[:digit:]]+)?</literal>'
+                Wie man sieht, werden REs schnell unübersichtlich.
+                Das Chaos wird in Verbindung mit &sed; und <command>bash</command> perfekt, da sich noch viele
+                lustige '<literal>\</literal>' und '<literal>/</literal>' hinzugesellen werden. Dazu aber später.
+            </para>
+        </section>
+    </section>
+</chapter>
+
+<chapter xml:id="sec-erste-schritte"><info><title>Erste Schritte mit sed</title></info>
+    <section xml:id="sec-erste-schritte-io"><info><title>Ein- und Ausgabe</title></info>
+        <para>
+            &sed; liest gewöhnlich von &stdin; (standard input, normalerweise die Tastatur)
+            und schreibt auf &stdout; (standard output, normalerweise der Bildschirm).
+            <indexterm><primary>Shell</primary><secondary>Umleite-Operatoren</secondary></indexterm>
+            <indexterm><primary>&stdin;</primary></indexterm>
+            <indexterm><primary>&stdout;</primary></indexterm>
+            Man kann aber nach den Kommandozeilenoptionen einen (oder mehrere) Dateinamen angeben,
+            von dem die Eingabe gelesen werden soll.
+            Weiters kann man sich der <emphasis>Umleite-Operatoren</emphasis> der Shell bedienen
+            (<literal>&gt;</literal>, <literal>&lt;</literal>, <literal>|</literal>).
+            <indexterm><primary>Kommando</primary><secondary>p</secondary><tertiary>Beispiel</tertiary></indexterm>
+            Die drei folgenden Zeilen liefern das selbe Ergebnis:
+<programlisting>sed -n -e '/root/p' /etc/passwd
+sed -n -e '/root/p' &lt; /etc/passwd
+cat /etc/passwd | sed -n -e '/root/p'
+</programlisting>
+            Das Script '<literal>/root/p</literal>' liest die Eingabedatei ein (<filename>/etc/passwd</filename>)
+            und schreibt nur jene Zeile(n) auf den Bildschirm die das Wort 'root' enthalten.
+        </para>
+        <note>
+            Noch eine kleine Besserwisserei meinerseits, die mit &sed; eigentlich nichts zu tun hat,
+            sondern mit Shell-Scripting.
+            Von den beiden Zeilen <programlisting>programm 2&gt;&amp;1 &gt;file</programlisting> und
+            <programlisting>programm &gt;file 2&gt;&amp;1</programlisting>
+            ist die zweite Version vorzuziehen, da die erste Kommandozeile &stderr;
+            auf den alte &stdout; setzt, und erst anschließend &stdout; auf
+            <filename>filename</filename> umlenkt; &stderr; wird also i.d.R. nicht nach
+            <filename>filename</filename> umgelenkt werden.
+        </note>
+        <para>
+            Die meisten <acronym>UNIX</acronym>-Kommandos lassen sich als <emphasis>Filter</emphasis> einsetzen.
+            <indexterm><primary>Filter</primary></indexterm>
+            Filter werden dazu verwendet um einen Stream von Daten durch mehrere mit <emphasis>pipes</emphasis> (<literal>|</literal>)
+            verkettete Programme zu jagen. Eine Pipe macht nichts anderes als &stdout; des Programms auf der linken Seite mit &stdin; des
+            Programms auf der rechten Seite zu verknüpfen.
+            Auf diese Weise lassen sich in Verwendung von verschiedenen spezialisierten Programmen sehr komplexe Aufgaben erledigen.
+        </para>
+    </section>
+    <section xml:id="sec-erste-schritte-kommandos"><info><title>Kommandos</title></info>
+        <para>
+            Das Programm <programlisting>sed -e 'd' /etc/services</programlisting>
+            liefert erstmal gar nix.
+            <indexterm><primary>Kommando</primary><secondary>d</secondary></indexterm>
+        </para>
+        <para>
+            Wie die Verarbeitung einer Zeile zu erfolgen hat, wird in einem <emphasis>Script</emphasis> oder
+            <emphasis>Programm</emphasis>, festgelegt, das auf der Kommandozeile der Option '<option>-e</option>' folgen muss.
+            Ein &sed;-Script enthält mindestens ein Kommando
+            (in diesem Fall '<literal>d</literal>' für <emphasis>delete</emphasis>).
+        </para>
+        <note>
+            Eigentlich ist die Angabe der Option '<option>-e</option>' nicht zwingend notwendig. Wenn diese Option weggelassen wird,
+            dann wird das erste Argument als Script und alle folgenden Argumente als Dateinamen interpretiert.
+            In dieser Einführung wird die Option '<option>-e</option>' aber immer explizit angegeben um Missverständnisse zu vermeiden.
+        </note>
+        <para>
+            Die Funktionsweise eines Scriptes ist wie folgt:
+            eine Zeile des Eingabe-Streams wird in den Arbeitsspeicher
+            (&patspace;<indexterm><primary>Pattern space</primary></indexterm>) geladen, welcher dann nach den angegebenen
+            Regeln bearbeitet (im Beispiel oben wird er gelöscht) und anschließend ausgegeben wird.
+            Die Eingabedatei wird dabei nicht verändert.
+            Diese Schritte werden Zeile für Zeile wiederholt, bis das Dateiende erreicht ist.
+        </para>
+        <para>
+            Bitte die beiden Anführungszeichen ' ' um das &sed;-Script '<literal>d</literal>' beachten.
+            Diese verhindern eine Re-Interpretation der dazwischen liegenden Zeichen seitens der <emphasis>Shell</emphasis>.
+            Diese Anführungszeichen sollten immer verwendet werden, da man sich dadurch unerwartetes
+            Verhalten des Scriptes ersparen kann.
+        </para>
+        <note>
+            Die zeilenorientierte Arbeitsweise von &sed; eignet es sich sehr gut um Texte zu bearbeiten.
+            Binäre Daten werden kaum mit &sed; bearbeitet, da sie sich nur umständlich als Reguläre Ausdrücke
+            angeben lassen und weil je nach Beschaffenheit der Eingabe-Daten sehr große Blöcke in den &patspace;
+            geladen werden müssen.
+        </note>
+    </section>
+
+    <section xml:id="sec-erste-schritte-addressen"><info><title>Adressen</title></info>
+        <indexterm><primary>Adresse</primary></indexterm>
+        <para>
+            Den meisten Kommandos kann man eine <emphasis>Adresse</emphasis><indexterm><primary>Adresse</primary></indexterm>
+            voranstellen. Eine solche Adresse bestimmt, welche Zeilen mit dem betreffenden Kommando zu bearbeiten sind.
+            Somit kann man Kommandos selektiv auf bestimmte Zeilen, Blöcke
+            oder wie wir später sehen werden, auf bestimmte Zeichenketten, anwenden.
+        </para>
+        <para>
+            Eine Adresse ist zum Beispiel eine fixe Zeilennummer in einer Datei oder ganze Bereiche, oder aber Zeilen
+            die auf einen bestimmten Reguläre Ausdruck passen.
+            <programlisting>sed -e '1d' /etc/services</programlisting>Hier wird das Kommando
+            '<literal>d</literal>' auf die Zeile mit der Adresse '1' angewendet.
+            Der Effekt des Programms ist der, dass die erste Zeile von
+            <filename class="directory">/etc/services</filename> in den
+            &patspace; geladen, dieser dann gelöscht und anschließend der leere
+            &patspace; (also nichts) ausgegeben wird.
+            Alle anderen Zeilen werden in den &patspace; geladen, der nicht bearbeitet wird da die
+            Adresse nicht auf die Zeile zutrifft und anschließend wird der &patspace; nach
+            &stdout; geschrieben.
+            Das Ergebnis des Scripts ist eine Kopie der Eingabedatei, in der die erste Zeile fehlt.
+        </para>
+        <para>
+            Man kann auch Adressbereiche angeben wie in <programlisting>sed -e '1,10d' /etc/services</programlisting>
+            was die ersten 10 Zeilen löscht oder man kann jede n-te Zeile bearbeiten wie in
+            <programlisting>sed -e '10~2d' /etc/services</programlisting>
+            wo jede zweite Zeile, ausgehend von der 10. Zeile gelöscht wird.
+            <indexterm><primary>Adresse</primary><secondary>~</secondary></indexterm>
+            Letzteres ist eine <acronym>GNU</acronym>-Erweiterung von &sed;;
+            dort wo Portabilität auf andere Umgebungen wichtig ist, ist diese Adresse zu vermeiden.
+        </para>
+        <para>
+            Manchmal ist es interessant, nur solche Zeilen einer Konfigurationsdatei anzuzeigen, die nicht auskommentiert sind.
+            Das kann mit folgender Zeile geschehen:
+            <programlisting>sed -e '/^#.*/d' /etc/inetd</programlisting>
+            Die Adresse <literal>/re/</literal> wendet das nachfolgende &sed;-Kommando auf jede Zeile an,
+            auf die der Reguläre Ausdruck <emphasis>re</emphasis> passt.
+            Nur zur Erinnerung - die angegebene RE passt auf jede Zeile, welche "mit einem '<literal>#</literal>' beginnt und danach null oder
+            mehr beliebige Zeichen enthält".
+            Das ist aber nicht das was wir eigentlich wollten. Denn enthält die Datei eine leere Zeile, dann wird diese auch ausgegeben.
+            Also müssen wir unsere Strategie ändern und z.B. nur jene Zeilen ausgeben,
+            die mit einem Zeichen beginnen, das nicht '<literal>#</literal>' ist:
+            <programlisting>sed -e '/^[^#].*/p' /etc/inetd</programlisting>
+            Das ist neu: das Kommando <literal>p</literal>, das für <emphasis>print</emphasis> steht,
+            also den &patspace; ausgeben.
+            <indexterm><primary>Kommando</primary><secondary>p</secondary></indexterm>
+            <indexterm><primary>Kommando</primary><secondary>p</secondary><tertiary>Beispiel</tertiary></indexterm>
+            Die Ausgabe ist aber alles Andere als erwartet: jede Zeile wird ausgegeben, die erwünschten Zeilen sogar zwei mal.
+            Was ist passiert? Noch einmal müssen wir die Funktionsweise von &sed; durchkauen:
+            Zeile einlesen, wenn die Adresse passt, dann &patspace; bearbeiten
+            (in unserem Falle ausgeben), dann &patspace; ausgeben.
+            Wir müssen also den letzten Schritt unterbinden. Das geht mit der Option
+            <option>-n</option><indexterm><primary>Option</primary><secondary><option>-n</option></secondary></indexterm> (portabel!)
+            oder <literal>--quiet</literal> oder <literal>--silent</literal>, je nach Geschmack.
+            Das richtige Programm schaut nun so aus:
+            <programlisting>sed -n -e '/^[^#].*/p' /etc/inetd</programlisting>
+        </para>
+        <para>
+            Wir haben gesehen, dass mit der Adresse '<literal><replaceable>n</replaceable>,<replaceable>m</replaceable></literal>'
+            die <replaceable>n</replaceable>-te bis <replaceable>m</replaceable>-te Zeile bearbeitet wird.
+            Das geht auch mit REs: die Adresse '<literal>/<replaceable>BEGIN</replaceable>/,/<replaceable>END</replaceable>/</literal>'
+            selektiert alle Zeilen ab der ersten Zeile,
+            auf die die RE '<replaceable>BEGIN</replaceable>' passt bis zu der Zeile auf die die RE '<replaceable>END</replaceable>'
+            passt oder bis zum Dateiende, je nach dem was früher kommt. Wird '<replaceable>BEGIN</replaceable>' nicht gefunden,
+            dann wird keine Zeile bearbeitet.
+            Es ist oft so, dass man beim Compilieren eines umfangreichen Projektes regelrecht von Fehlermeldungen und
+            Warnungen erschlagen wird. Das ist ein Job für &sed;: das folgende Beispiel liefert nur
+            jene Ausgaben des <command>gcc</command> die zwischen der ersten Warnung und der ersten Fehlermeldung liegen.
+            <programlisting>gcc sourcefile.c 2&gt;&amp;1 | sed -n -e '/warning:/,/error:/p'</programlisting>
+            Und wenn '<literal><replaceable>n</replaceable>,<replaceable>m</replaceable></literal>' gilt und
+            '<literal>/<replaceable>BEGIN</replaceable>/,/<replaceable>END</replaceable>/</literal>', warum nicht auch eine Kombination davon?
+            Ein '<literal>/<replaceable>BEGIN</replaceable>/,<replaceable>m</replaceable></literal>' heißt ab der Zeile, auf welche die RE
+            '<replaceable>BEGIN</replaceable>' passt bis zur <replaceable>m</replaceable>-ten Zeile usw.
+        </para>
+        <para>
+            Das folgende Beispiel ist wohl das kürzeste sinnvolle Script in &sed;, das es gibt.
+            <indexterm><primary>Adresse</primary><secondary>$</secondary></indexterm>
+            <indexterm><primary>Adresse</primary><secondary>$</secondary><tertiary>Beispiel</tertiary></indexterm>
+            <indexterm><primary>Kommando</primary><secondary>=</secondary></indexterm>
+            Es gibt die Zeilenanzahl der bearbeiteten Datei aus (<command>wc</command> <option>-l</option>):
+            <programlisting>sed -n -e '$='</programlisting>
+            Das <emphasis>Dollar</emphasis>-Zeichen '<literal>$</literal>' ist in diesem Fall nicht das Zeilenende einer RE
+            (es fehlen nämlich die <literal>//</literal>), sondern ist die Adresse der
+            letzten Zeile der letzten Eingabe-Datei, und das Kommando '<literal>=</literal>' gibt
+            die aktuelle Zeilennummer <emphasis>vor</emphasis> der Ausgabe aus.
+        </para>
+        <para>
+            Ein Rufezeichen '<literal>!</literal>' nach einer Adresse verkehrt diese in ihr Gegenteil um.
+            <indexterm><primary>Adresse</primary><secondary>!</secondary></indexterm>
+            Die Adresse <literal><replaceable>n</replaceable>,<replaceable>m</replaceable>!</literal> trifft auf alle Zeilen
+            außer Zeilen <replaceable>n</replaceable> bis <replaceable>m</replaceable> zu.
+            Die Adresse '<literal>/awk/!</literal>' selektiert alle Zeilen die nicht die Zeichenkette 'awk' enthalten.
+        </para>
+    </section>
+
+    <section xml:id="sec-erste-schritte-more"><info><title>Mehr Kommandos</title></info>
+        <para>
+            Neben den Kommandos '<literal>d</literal>' und '<literal>p</literal>' die wir schon kennen gibt es noch eine
+            Reihe anderer Kommandos, die aber nicht alle in dieser Einführung beschreiben werden.
+            Hat man erst einmal die Syntax eines &sed; Programms verstanden,
+            findet man sich leicht in der man/info-page zurecht und man kann sie dort nachschlagen.
+        </para>
+        <para>
+            Ein einfaches Kommando ist '<literal>q</literal>', das das Programm abbricht.
+            <indexterm><primary>Kommando</primary><secondary>q</secondary></indexterm>
+            Ob der &patspace; noch geschrieben wird hängt davon ab, ob die Option
+            <option>-n</option><indexterm><primary>Option</primary><secondary><option>-n</option></secondary></indexterm> angegeben wurde oder nicht.
+            Als Beispiel folgen zwei funktionsmäßig äquivalente Emulationen des <acronym>UNIX</acronym>-Befehls
+            <command>head</command>, wobei die zweite Lösung effizienter ist, da sie nur die ersten 10 Zeilen bearbeiten muss.
+<programlisting>sed -n -e '1,10p'
+sed -e '10q'
+</programlisting>
+            <indexterm><primary>Kommando</primary><secondary>q</secondary><tertiary>Beispiel</tertiary></indexterm>
+        </para>
+        <para>
+            Weiters wird auch das Kommentarzeichen '<literal>#</literal>' als Kommando bezeichnet.
+            <indexterm><primary>Kommando</primary><secondary>#</secondary></indexterm>
+            &sed; ignoriert alle nachfolgenden Zeichen im <emphasis>Script</emphasis> bis zum Ende der Zeile.
+            Das ist nützlich in Scripten, die in Files geschrieben wurden und die an trickreichen Stellen ein
+            paar erklärende Worte verlangen.
+        </para>
+        <para>
+            Ein wichtiges Kommando ist
+            '<literal>s/<replaceable>re</replaceable>/<replaceable>rep</replaceable>/<replaceable>flag</replaceable></literal>'.
+            <indexterm><primary>Kommando</primary><secondary>s</secondary></indexterm>
+            Hierbei wird diejenige Portion im
+            &patspace;, auf welche die RE '<replaceable>re</replaceable>' passt durch die Zeichenkette '<replaceable>rep</replaceable>' ersetzt und
+            zwar in der Modalität, die mit dem <replaceable>flag</replaceable> bestimmt wird.
+            Ein '<literal>d</literal>' ersetzt das erste Muster und fängt dann einen neuen Zyklus an.
+            Das Flag '<literal>g</literal>' ersetzt <emphasis>alle</emphasis> Muster in einer Zeile, eine Nummer '<replaceable>n</replaceable>'
+            veranlasst sed, das <replaceable>n</replaceable>-te übereinstimmende Muster zu ersetzen.
+            <indexterm><primary>Kommando</primary><secondary>s</secondary><tertiary>Beispiel</tertiary></indexterm>
+            Mit dem Einzeiler <programlisting>sed -e '/ich/s/$1500/$3000/g' Gehaltsliste.dat</programlisting>
+            kann man ein bisschen träumen.
+            (Bei den Träumen wird es wohl bleiben, denn &sed; verändert die Datei nicht!)
+            Wer jetzt denkt die Ausgabe mittels Ausgabeumleitung '&gt;' wieder auf die Eingabedatei umzuleiten,
+            der wird sich schön wundern: die Datei ist dann nämlich leer.
+            Der richtige wenn auch umständliche Weg ist die Ausgabe in einen temporäre Datei umzuleiten und diese
+            dann auf den Namen der Quelldatei umzubenennen.
+            Noch nicht verstanden was das vorherige Beispiel gemacht hat? In der Zeile, die 'ich' enthält wird das
+            Gehalt von $1500 auf $3000 verdoppelt, alle anderen Zeilen werden unverändert ausgegeben.
+        </para>
+        <para>
+            Die folgende Zeile lässt die Ausgabe des Shell-Kommandos <command>ls</command> hingegen sehr 'l33t' aussehen:
+            <programlisting>ls -l /|sed -e 's/o/0/g'|sed -e 's/l/1/g'|sed -e 's/e/3/g'</programlisting>
+            Das ist als Kommandozeile ein wenig lang - könnte man nicht...
+            Ja man kann das alles kompakter schreiben, indem man mehrere &sed;-Kommandos durch Strichpunkte trennt.
+            <programlisting>ls -l /|sed -e 's/o/0/g;s/l/1/g;s/e/3/g'</programlisting>
+            Will man dem blinden Zorn des <emphasis>Superusers</emphasis> aus dem Wege gehen und eine Verhunzung seiner
+            Homedirectory vermeiden, muss man die Adresse '<literal>/ root$/!</literal>' den Kommandos voranstellen.
+            Diese Adresse selektiert jede Zeile, die nicht mit ' root' endet. Um mehrere Kommandos auf eine Adresse zu binden,
+            müssen diese gruppiert werden. Das geschieht mit den geschwungenen Klammern <literal>{}</literal>.
+            <indexterm><primary>Gruppierung von Kommandos {}</primary></indexterm>
+            <indexterm><primary>Kommando</primary><secondary>{}</secondary></indexterm>
+            Wichtig: auch nach dem letzten Kommando muss ein Strichpunkt gesetzt werden.
+            <programlisting>ls -l /|sed -e '/ root$/!{s/o/0/g;s/l/1/g;s/e/3/g;}'</programlisting>
+            <indexterm><primary>Adresse</primary><secondary>!</secondary><tertiary>Beispiel</tertiary></indexterm>
+            <indexterm><primary>Kommando</primary><secondary>{}</secondary><tertiary>Beispiel</tertiary></indexterm>
+        </para>
+        <para>
+            Das folgende Script zeigt dazu ein Beispiel und kann dazu verwendet werden, 8 Leerzeichen in ein
+            Tabulatorzeichen zu verwandeln.
+            <programlisting>sed -e 's/ \{8\}/^t/g'</programlisting>
+            wobei das <literal>^t</literal> ein <keysym>tab</keysym>-Zeichen symbolisieren soll.
+            Alles schön und gut, nur ist die <keysym>tab</keysym>-Taste unter der Shell für das schöne Wort
+            Kommandozeilenvervollständigung reserviert, ein Tabulatorzeichen selber kann man nicht direkt eingeben.
+            Der einfachste Weg dazu ist die Tastenkombination <keycap>^V^I</keycap> zu drücken, was für
+            <keycap>CTRL</keycap>-<keycap>V</keycap> <keycap>CTRL</keycap>-<keycap>I</keycap> steht.
+            Ein <keycap>^V</keycap> fügt das nachfolgende Zeichen ohne weitere Interpretation auf der Kommandozeile ein.
+            Alternativ kann man also auch <keycap>^V</keycap>&lt;<keysym>tab</keysym>&gt; tippen.
+            Mehr dazu in den info-pages zu <emphasis>bash</emphasis>, <emphasis>tcsh</emphasis> oder <emphasis>readline</emphasis>,
+            sowie bei Ihrem Arzt oder Apotheker.
+        </para>
+        <note>
+            Es sei noch einmal angemerkt, dass Basic Regular Expressions die Zeichen <literal>+</literal> und
+            <literal>?</literal> nicht kennen. &gnused; führt dagegen <literal>\+</literal> und <literal>\?</literal> ein.
+            Alternativ dazu kann man mit &gnused; auch die Option <option>-r</option> verwenden.
+            Diese Option bewirkt, dass alle REs als Extended REs interpretiert werden.
+            Da die gewünschten Effekte sich aber relativ leicht mit Standard Bordmitteln von &sed; erreichen lassen,
+            empfiehlt es sich, diese unportablen Erweiterungen selten oder gar nicht zu verwenden.
+            <indexterm><primary>&gnused;</primary></indexterm>
+        </note>
+        <para>
+            Ein weiteres nützliches Kommando ist
+            <indexterm><primary>Kommando</primary><secondary>y</secondary></indexterm>
+            '<literal>y/<replaceable>SOURCE-CHARS</replaceable>/<replaceable>DEST-CHARS</replaceable>/</literal>',
+            welches alle Zeichen in <replaceable>SOURCE-CHARS</replaceable> in das entsprechende Zeichen in
+            <replaceable>DEST-CHARS</replaceable> umwandelt. Unnütz zu sagen, dass beide Charakter-listen die gleiche Anzahl
+            von Zeichen enthalten müssen. Das folgende Script 'verschlüsselt' den Text mit der sogenannten
+            'rot-13' Methode: alle Buchstaben werden um 13 Zeichen verschoben - aus 'a' wird 'n', aus 'b' wird 'o' usw:
+            <indexterm><primary>rot-13</primary></indexterm>
+            (Der Einfachheit halber werden hier nur Kleinbuchstaben verändert)
+            <indexterm><primary>Kommando</primary><secondary>y</secondary><tertiary>Beispiel</tertiary></indexterm>
+            <programlisting>sed -e 'y/abcdefghijklmnopqrstuvwxyz/nopqrstuvwxyzabcdefghijklm/'</programlisting>
+            was auch ein schönes Beispiel für eine umständliche Benutzung von &sed; ist.
+            Den selben Effekt kann man mit <command>tr</command> sehr viel einfacher und weniger
+            fehlerträchtig erreichen:<programlisting>tr '[a-z]' '[n-za-m]'</programlisting>
+        </para>
+        <para>
+            Ein Nachtrag zu den geschwungenen Klammern '<literal>{}</literal>':
+            <indexterm><primary>Kommando</primary><secondary>{}</secondary></indexterm>
+            Aus der Sicht von &sed; ist die öffnende
+            Klammer '<literal>{</literal>' ein Kommando, dem eine Adresse oder ein Adressbereich vorangestellt werden kann.
+            Das lässt sich für einen Trick missbrauchen, denn wenn man die Kommandos '<literal>=</literal>',
+            '<literal>a</literal>', '<literal>i</literal>', oder '<literal>r</literal>'
+            (erlauben höchstens eine Adresse; zur Bedeutung dieser Kommandos bitte die Dokumentation bemühen)
+            auf einen Adress<emphasis>bereich</emphasis> anwenden will, kann man sie in geschwungene Klammern setzen.
+            So ist z.B. '<literal>1,9=</literal>' ein ungültiges Kommando, aber '<literal>1,9{=;}</literal>'
+            ist ist nicht zu beanstanden.
+            Der Effekt dieses Programms ist dass die Zeilen von 1 bis 9 mit vorangestellten Zeilennummern ausgegeben werden,
+            der Rest des Files wird unverändert wiedergegeben.
+        </para>
+        <tip>
+            Weil es oft gebraucht wird, stelle ich noch Scripte zur Umwandlung von Dateien im <acronym>DOS</acronym>-Format
+            (CR/LF) ins <acronym>UNIX</acronym>-Format (LF) und umgekehrt vor.
+            <indexterm><primary>dos2unix</primary></indexterm>
+            <indexterm><primary>unix2dos</primary></indexterm>
+            Sie wurden der schon erwähnten <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://sed.sourceforge.net/sedfaq.html">sedfaq</link> von Eric Pement entnommen.
+<programlisting># 3. Under UNIX: convert DOS newlines (CR/LF) to Unix format
+sed 's/.$//' file    # assumes that all lines end with CR/LF
+sed 's/^M$// file    # in bash/tcsh, press Ctrl-V then Ctrl-M
+# 4. Under DOS: convert Unix newlines (LF) to DOS format
+C:\> sed 's/$//' file                     # method 1
+C:\> sed -n p file                        # method 2
+</programlisting>
+            Eine Randbemerkung: Ist keine <option>-e</option> Option <indexterm><primary>Option</primary><secondary><option>-e</option></secondary></indexterm>
+            angegeben, dann wird der erste Parameter, der keine Option ist als das auszuführende Programm genommen.
+            Um Verwirrung zu vermeiden empfiehlt sich immer ein <option>-e</option> anzugeben.
+            Einem Guru wie Herrn Pement sei es aber gestattet sich über diese Faustregel hinwegzusetzen.
+            <para>
+                UNIX wäre nicht UNIX, wenn es nicht unzählige andere Methoden dafür gäbe:
+                beispielsweise die Programme <command>dos2unix</command> bzw. <command>unix2dos</command>, oder der
+                Befehl <literal><command>tr</command> -d [^M] &lt; inputfile &gt; outputfile</literal> um vom
+                DOS- ins UNIX-Format zu konvertieren, oder <literal>:set fileformat=dos</literal> bzw.
+                <literal>:set fileformat=unix</literal> unter <command>vim</command> oder...
+            </para>
+        </tip>
+    </section>
+</chapter>
+
+<chapter xml:id="sec-interessanter"><info><title>Ein paar interessantere Beispiele</title></info>
+    <para>
+        Wer bis hierher gekommen ist, sollte wirklich verstanden haben was <emphasis>Adressen</emphasis> und was
+        <emphasis>Kommandos</emphasis> sind.
+        Das ist wichtig, denn ab jetzt werden diese in einem &sed;-Script hintereinander gehängt,
+        und das kann sonst schon für einige Verwirrung sorgen.
+    </para>
+    <para>
+        Hin und wieder trifft man in Scripten nicht die gewohnte Form '<literal>/<replaceable>r</replaceable>/</literal>' einer RE vor - die
+        <emphasis>Slash</emphasis>es '/' scheinen zu fehlen. Das hat den Grund, dass es manchmal nötig ist in einer RE den
+        <emphasis>Slash</emphasis> selber anzugeben.
+        Damit dieser aber nicht fälschlicherweise interpretiert wird, muss er mit dem <emphasis>Backslash</emphasis>
+        gequotet werden, also '<literal>\/</literal>'. &sed; gibt einem die Möglichkeit, ein anderes
+        Zeichen als den <emphasis>Slash</emphasis> als RE-Begrenzer zu verwenden. Man kann also '<literal>/\/bin\/ls/</literal>'
+        oder beispielsweise '<literal>\@/bin/ls@</literal>' verwenden.
+        In gleicher Weise kann das mit dem <literal>s</literal>- oder <literal>y</literal>-Kommando geschehen:
+        '<literal>s//</literal>' ist gleichwertig zu '<literal>s@@</literal>' Hat man deshalb nicht genau verstanden,
+        was Adresse was Kommando und was RE ist, kommt man da leicht ins Schleudern.
+    </para>
+    <section xml:id="sec-interessanter-probleme"><info><title>Probleme mit REs</title></info>
+        <para>
+            Reguläre Ausdrücke sind greedy, finden also immer den längsten passenden String. Das kann manchmal unerwünscht sein.
+            Will man zum Beispiel eine <acronym>HTML</acronym>-Seite in Text umwandeln, dann könnte man in Versuchung kommen
+            folgendes Script zu verwenden:
+            <programlisting>sed -e 's/&lt;.*&gt;//g' text.html</programlisting>
+            Das liefert aber nicht den gewünschten Effekt, denn eine Zeile
+            <screen>Das &lt;b&gt;ist&lt;/b&gt; ein &lt;i&gt;Beispiel&lt;/i&gt;.</screen>wird zu<screen>Das.</screen>
+            verkrüppelt. Man muss also nur jene Zeichen bis zum <emphasis>ersten</emphasis> '&gt;' löschen:
+            <programlisting>sed -e 's/&lt;[^&gt;]*&gt;//g' text.html</programlisting>
+        </para>
+        <para>
+            Muss man einen Text nicht bis zum ersten Vorkommen eines Zeichens sondern einer Zeichenkette bearbeiten,
+            wird die RE ein bisschen komplizierter. Im Kapitel mit den Beispielen findet sich dazu ein
+            Lösungsansatz (Löschen von Kommentaren).
+        </para>
+    </section>
+    <section xml:id="sec-interessanter-selektiv"><info><title>Selektives Ersetzen</title></info>
+        <para>
+            Das <literal>s///</literal> Kommando kann nicht nur fixe Strings einsetzen, sondern auch den gefundenen String oder
+            Substrings davon. Der <emphasis>Ampersand</emphasis> '&amp;' steht dabei für den gesamten gefundenen String.
+            <indexterm><primary>Kommando</primary><secondary>&amp;</secondary></indexterm>
+            <indexterm><primary>Kommando</primary><secondary>Backreferenz &amp;</secondary></indexterm>
+        </para>
+        <para>
+            In meiner Kindheit hatten wir die <emphasis>elleff</emphasis>-Sprache, unsere Geheimsprache, bei der man jeden Vokal
+            (oder Gruppe von Vokalen) in einem Wort mit <literal>&lt;VOKAL&gt;l&lt;VOKAL&gt;f&lt;VOKAL&gt;</literal> ersetzen muss.
+            <indexterm><primary>elleff-Sprache</primary></indexterm>
+            Kompliziert? Da ist die &sed;-Schreibweise einfacher:
+            <programlisting>sed -e 's/[aeiou][aeiou]*/&amp;l&amp;f&amp;/g'</programlisting>
+            Die Mächtigen der Welt, als 'Bilifill Clilifintolofon' oder 'Boloforilifis Jelefelzilifin' ausgesprochen,
+            gewinnen damit in meinen Augen sofort an Sympathie. Meine Hochachtung jedem, der ein  ver<emphasis>elleff</emphasis>tes
+            'ukulele' aussprechen kann ohne es vom Bildschirm zu lesen.
+        </para>
+        <para>
+            Mit &gnused; kann man folgende Zeile schreiben:
+            <indexterm><primary>&gnused;</primary></indexterm>
+            <programlisting>sed -e 's/[aeiou]\+/&amp;l&amp;f&amp;/g'</programlisting>
+            Bitte den <emphasis>Backslash</emphasis> '<literal>\</literal>' vor dem Plus beachten, da dieses Zeichen - weil
+            <acronym>GNU</acronym>-Erweiterung - zuerst als normaler Charakter angesehen wird und seine Bedeutung die er bei
+            REs inne hat, erst durch den Backslash gewinnt.
+            Gleiches gilt auch für das <emphasis>Fragezeichen</emphasis> (<emphasis>Questionmark</emphasis>) '<literal>?</literal>',
+            nicht aber für den <emphasis>Asterisk</emphasis>en '<literal>*</literal>'.
+        </para>
+        <para>
+            Hier weise ich noch einmal auf die Grenzen von Regulären Ausdrücken hin.
+            <indexterm><primary>Regular Expression</primary><secondary>Grenzen von</secondary></indexterm>
+            Es ist nicht möglich, die Rücktransformation aus der <emphasis>elleff</emphasis>-Sprache mit REs auszudrücken.
+            Ein <literal>[aeiou]l[aeiou]f[aeiou]</literal> kann man wohl angeben, nicht aber die Bedingung dass alle drei
+            Vokale gleich sein müssen.
+            Ob dies hinreichend ist um die <emphasis>elleff</emphasis>-Sprache als sichere Verschlüsselungsmethode zu bezeichnen,
+            müssen wohl findigere Kryptologen entscheiden.
+        </para>
+        <para>
+            Mit &sed; ist es auch möglich, Teile von Strings heraus zu picken um diese später zu verwenden.
+            <indexterm><primary>Kommando</primary><secondary>Backreferenz \(\)</secondary></indexterm>
+            <indexterm><primary>Kommando</primary><secondary>\(\)</secondary></indexterm>
+            <indexterm><primary>Kommando</primary><secondary>\<replaceable>n</replaceable></secondary></indexterm>
+            Diese Teile werden mit '<literal>\(</literal>' und '<literal>\)</literal>' markiert, und man kann auf diese Strings mit
+            '<literal>\1</literal>', '<literal>\2</literal>' usw. zugreifen.
+            Nehmen wir einmal an wir hätten ein File, in dem verschiedene Namen eingetragen sind:
+<screen>John Fitzgerald Kennedy
+Franz Josef Strauss
+Ernst Theodor Amadeus Hoffmann
+Theo Lingen
+</screen>
+            die in die Form <literal>&lt;VORNAME&gt; [&lt;INITIAL ZWEITER NAME&gt;.] &lt;NACHNAME&gt;</literal> gebracht werden soll.
+            Dazu muss man erst die Regionen definieren:
+            <programlisting>sed -e 's/^[^ ][^ ]* [[:alpha:]]..* [^ ][^ ]*$//'</programlisting>
+            Nun gibt man um die gewünschten Zonen die Klammern und stellt sich das Ergebnis mit '\1' und '\2' und '\3' zusammen:
+            <programlisting>sed -e 's/\(^[^ ][^ ]*\) \([[:alpha:]]\)..* \([^ ][^ ]*\)$/\1 \2. \3/'</programlisting>
+            und voilà das Ergebnis:
+<screen>John F. Kennedy
+Franz J. Strauss
+Ernst T. Hoffmann
+Theo Lingen
+</screen>
+            Will man das Ergebnis noch in eine Adressdatenbank importieren, dann muss man einen Feldbezeichner vor die Namen setzen.
+            Ein erster Versuch wäre der, das gleich in einem Rutsch mit dem Script
+            <programlisting>sed -e 's/\(^[^ ][^ ]*\) \([[:alpha:]]\)..* \([^ ][^ ]*\)$/name: \1 \2. \3/'</programlisting>
+            zu bewerkstelligen, das liefert aber genau da ein falsches Ergebnis, wenn der zweite Vorname fehlt.
+<screen>name: John F. Kennedy
+name: Franz J. Strauss
+name: Ernst T. Hoffmann
+Theo Lingen
+</screen>
+            Einem solchen nur teilweise formatierten Datenschwulst ist nur schwer beizukommen.
+            Deshalb den Output ungetesteter Scripte immer zuerst auf eine temporäre Datei umleiten,
+            diese auf Korrektheit prüfen und dann die Zieldatei ersetzen.
+            Wie man die Namen nun richtig formatiert, wird im nächsten Kapitel beschrieben.
+            Warum hat das Script aber nicht richtig gearbeitet? Damit die RE auf eine Zeile zutrifft, muss diese mindestens 3 Felder,
+            durch Leerzeichen getrennt, enthalten. Das ist bei Herrn Lingen nicht der Fall,
+            deshalb wird auch das Kommando nicht ausgeführt und der &patspace; wird unberührt gelassen.
+        </para>
+    </section>
+    <section xml:id="sec-interessanter-grouping"><info><title>Gruppieren von Kommandos</title></info>
+        <para>
+            Ein &sed;-Script kann mehrere Kommandos enthalten, die nach einander abgearbeitet werden.
+            Das kann man auf mehrere Wege erreichen:
+            Man kann zwei Kommandos im selben Script durch einen <emphasis>Semicolon</emphasis> (;) trennen
+            oder man gibt mehrere Scripts mit der Option
+            <option>-e</option><indexterm><primary>Option</primary><secondary><option>-e</option></secondary></indexterm> an.
+            Für längere Scripte empfiehlt es sich, diese in eine Datei zu schreiben und diese Scriptdatei mit der Option
+            <option>-f</option><indexterm><primary>Option</primary><secondary><option>-f</option></secondary></indexterm>
+            aufzurufen.
+        </para>
+        <para>
+            Eine mögliche Lösung des obigen Problems benutzt zwei Kommandos: das erste kürzt den Namen,
+            ein zweites setzt vor alle Zeilen den String <emphasis>name:</emphasis>.
+<programlisting>sed -e 's/\(^[^ ][^ ]*\) \([[:alpha:]]\)..* \([^ ][^ ]*\)$/\1 \2. \3/' \
+  -e 's/../name: &amp;/'</programlisting>
+            oder man trennt die zwei Anweisungen durch einen Strichpunkt (<literal>;</literal>).
+            Zu beachten ist in der zweiten Anweisung die RE '<literal>..*</literal>'; würde man nur einen Punkt schreiben, passte dieser Ausdruck auch auf leere Zeilen.
+            Das wird mit zwei Punkten vermieden.
+        </para>
+        <para>
+            Diese Script, in eine Datei geschrieben, schaut so aus:
+<programlisting>s/\(^[^ ][^ ]*\) \([[:alpha:]]\)..* \([^ ][^]*\)$/\1 \2. \3/
+s/..*/name: &amp;/
+</programlisting>
+        </para>
+        <note>
+            Und wieder eine Bemerkung die nichts mit &sed; zu tun hat:
+            Die <emphasis>Shell</emphasis> gibt einem die Möglichkeit Scripte wie normale Programme zu behandeln.
+            Dazu muss man nur an den Anfang des Scriptes die Zeile '<literal>#!<replaceable>/pfad/zum/programm</replaceable></literal>'
+            setzen und die Scriptdatei als ausführbar markieren. Wenn diese Datei nun gestartet wird, ruft die Shell den angegebenen
+            Interpreter mit dem Scriptnamen als Parameter auf. Auf das vorhergehende Beispiel angewandt sieht das so aus:
+<programlisting>#!/bin/sed -f
+s/\(^[^ ][^ ]*\) \([[:alpha:]]\)..* \([^ ][^]*\)$/\1 \2. \3/
+s/..*/name: &amp;/
+</programlisting>
+            Die Option <option>-f</option><indexterm><primary>Option</primary><secondary><option>-f</option></secondary></indexterm>
+            weist &sed; an, den nachfolgenden Dateinamen (den die Shell hinzufügt) als Script zu nehmen.
+            Dieser Trick funktioniert nur mit Scriptsprachen, bei denen das Zeichen '<literal>#</literal>' einen Kommentar einleitet,
+            da sonst auch die erste Zeile als Programmcode interpretiert wird.
+            Die Zeichenkombination '<literal>#!</literal>' nennt man <emphasis>shebang</emphasis>.
+            <indexterm><primary>shebang</primary></indexterm>
+            <indexterm><primary>#!</primary></indexterm>
+        </note>
+        <para>
+            Wie weiter oben beschrieben, kann man die geschwungenen Klammern '<literal>{}</literal>' verwenden um mehrere Kommandos
+            auf eine Adresse anzuwenden.
+            <indexterm><primary>Kommando</primary><secondary>{}</secondary></indexterm>
+            <indexterm><primary>Adresse</primary><secondary>Kombinieren von mehreren Adressen</secondary></indexterm>
+            Dies lässt sich auch für einen kleinen Trick missbrauchen. Will man zum Beispiel das <emphasis>shebang</emphasis>
+            ('<literal>#!</literal>') in der ersten Zeile einer Datei entfernen, kann man das so machen:
+            <programlisting>sed -e '1{/^#!/d;}'</programlisting>
+            Dieses Script löscht die erste Zeile, aber nur wenn sie mit '<literal>#!</literal>' beginnt.
+            Es ist ein schönes Beispiel für die Kombination von mehreren Adressen.
+        </para>
+    </section>
+</chapter>
+
+<chapter xml:id="sec-spaceballs"><info><title><emphasis>space</emphasis>balls</title></info>
+    <section xml:id="sec-spaceballs-ergaenzungen"><info><title>Ergänzungen zum &patspace;</title></info>
+        <indexterm><primary>Pattern space</primary></indexterm>
+        <para>
+            &sed; kennt noch weitere Kommandos zur Manipulation des &patspace;.
+            Das Kommando '<literal>D</literal>' löscht den Inhalt des &patspace; bist zum ersten newline.
+            <indexterm><primary>Kommando</primary><secondary>D</secondary></indexterm>
+            Ist darin anschließend noch Text enthalten, wird ein neuer Zyklus gestartet, <emphasis>ohne</emphasis>
+            eine neue Input-Zeile einzulesen.
+            Ist der &patspace; hingegen leer, beginnt ein normaler Zyklus.
+            Das Kommando '<literal>N</literal>' hängt ein newline an den Inhalt des &patspace;,
+            <indexterm><primary>Kommando</primary><secondary>N</secondary></indexterm>
+            liest eine neue Zeile ein, welche nach dem newline eingefügt wird.
+            Kann keine neue Zeile mehr eingelesen werden (Dateiende) dann wird das Programm an dieser Stelle abgebrochen.
+            Das Kommando '<literal>P</literal>' gibt den Inhalt des &patspace; bis zum ersten newline aus.
+            <indexterm><primary>Kommando</primary><secondary>P</secondary></indexterm>
+        </para>
+        <para>
+            Das Beispiel dazu löscht alle <emphasis>konsekutiven</emphasis> Leerzeilen in einer Datei.
+            Ist am Dateianfang eine Leerzeile, so bleibt sie erhalten, am Dateiende werden alle Leerzeilen gelöscht.
+            <programlisting>sed -e '/^$/N;/\n$/D'</programlisting>
+            <indexterm><primary>Kommando</primary><secondary>\n</secondary></indexterm>
+        </para>
+    </section>
+
+    <section xml:id="sec-spaceballs-hold"><info><title>Einmal &holdspace; und zurück</title></info>
+        <indexterm><primary>&holdspace;</primary></indexterm>
+        <para>
+            Neben dem &patspace;, in den die Zeile geladen und dort manipuliert wird,
+            kennt &sed; noch den &holdspace;, der zu Programmbeginn leer ist,
+            aber durch verschiedene Befehle manipuliert werden kann. Der &holdspace; wird
+            hauptsächlich dann verwendet wenn man das Operationsfeld eines einzigen Kommandos auf mehrere Zeilen
+            ausdehnen will oder sich Zeilen für später aufheben muss.
+        </para>
+        <para>
+            Das Kommando '<literal>h</literal>' überschreibt den &holdspace; mit dem Inhalt des &patspace;;
+            <indexterm><primary>Kommando</primary><secondary>h</secondary></indexterm>
+            die umgekehrte Operation wird durch das Kommando '<literal>g</literal>' erreicht.
+            <indexterm><primary>Kommando</primary><secondary>g</secondary></indexterm>
+            Es gibt auch groß geschriebene Versionen dieser Kommandos, welche den Zielspace nicht überschreiben,
+            sondern daran ein newline gefolgt vom Inhalt des Quellspace anhängen.
+        </para>
+        <para>
+            Zur Verinnerlichung des Konzepts des &holdspace; ein sehr einfaches Beispiel, in dem die erste
+            Zeile zurückbehalten wird und erst nach der letzten Zeile geschrieben wird.
+            Das Programm kopiert also die erste Zeile in den &holdspace;, gibt alle anderen aus,
+            und nach Erreichen des Dateiendes wird der Inhalt des &holdspace; in den
+            &patspace; kopiert, der dann noch ausgegeben werden muss.
+            Das und nichts anderes tut der folgende Einzeiler.
+            <programlisting>sed -n -e '1h;1!p;${g;p;}'</programlisting>
+        </para>
+        <para>
+            Das folgende Beispiel gibt alle Zeilen sofort aus, die nicht in einem
+            '<literal>/<replaceable>begin</replaceable>/,/<replaceable>end</replaceable>/</literal>'-Block liegen,
+            den Rest erst bei Dateiende. Im Hinblick auf ein &sed;-Programm heißt das, Zeilen im Block
+            '<literal>/<replaceable>begin</replaceable>/,/<replaceable>end</replaceable>/</literal>' werden an den &holdspace; angehängt.
+            Zu beachten ist nur, dass der Befehl '<literal>H</literal>' dem Inhalt des &holdspace;
+            <indexterm><primary>Kommando</primary><secondary>H</secondary></indexterm>
+            zuerst ein newline und dann der &patspace; anhängt. Deshalb muss man bei der
+            Ausgabe das erste Zeichen (sicher ein newline) unterdrücken.
+            <programlisting>sed -n -e '/begin/,/end/H;/begin/,/end/!p;${g;s/^.//;p;}'</programlisting>
+        </para>
+        <para>
+            Anzumerken ist hierbei noch dass &sed; den Inhalt des &patspace;
+            als eine Zeile ansieht, egal ob da noch ein oder mehrere newline enthalten sind.
+            Aus diesem Grund unterdrückt das Kommando '<literal>s/^.//</literal>' nicht alle Buchstaben nach einem newline,
+            sondern wirklich nur das erste Zeichen im &holdspace;.
+        </para>
+        <para>
+            Das Kommando '<literal>G</literal>' hat folgenden Effekt:
+            <indexterm><primary>Kommando</primary><secondary>G</secondary></indexterm>
+            es wird an den &patspace; ein newline und anschließend der Inhalt des &holdspace; angehängt.
+            Das kann man für die verschiedensten Zwecke ausnützen. Das Script
+            <programlisting>sed -e 'G'</programlisting>
+            fügt nach jeder Zeile ein Leerzeichen ein (der &holdspace; ist ja leer).
+            Mit &sed; kann man auch die Funktionsweise von <command>tac</command>
+            (ein umgekehrtes <command>cat</command>; dreht die Reihenfolge der Zeilen um) nachbilden:
+            <programlisting>sed -n -e 'G;h;$p'</programlisting>
+            mit dem kleinen Schönheitsfehler dass am Ende eine Leerzeile zu viel ausgegeben wird -
+            sie ist die Leerzeile, die in der ersten Zeile dem &patspace;
+            unnötigerweise angehängt wurde. Diesen Fehler beheben gleich beide folgenden Programme.
+<programlisting>sed -n -e 'G;h;$s/.$//p'
+sed -n -e '1!G;h;$p'
+</programlisting>
+        </para>
+        <para>
+            Mit dem Kommando '<literal>x</literal>' werden die Inhalte der beiden spaces ausgetauscht.
+            <indexterm><primary>Kommando</primary><secondary>x</secondary></indexterm>
+            Abschließend zu diesem Kapitel möchte ich ein längeres Beispiel (Danke an Ulf Bro) vorstellen,
+            das umgebrochene Absätze in eine einzelne Zeile umwandelt:
+<programlisting># Zeilen, die nicht leer sind werden dem Hold-Raum angehängt
+# Bei Leerzeilen wird der Inhalt des Hold-Raums in den
+# Pattern-Raum verlagert. Der Hold-Raum wird entleert
+# Erste Newline wird entfernt, die anderen in Leerzeichen
+# umgewandelt
+/^$/! H
+/^$/ {
+    x
+    s/\n//
+    s/\n/ /g
+    p
+}
+# Letzte Zeile nicht vergessen
+$ {
+    g
+    s/\n//
+    s/\n/ /g
+    p
+}
+</programlisting>
+        </para>
+    </section>
+</chapter>
+
+<chapter xml:id="sec-spruenge"><info><title>Sprünge (<emphasis>branches</emphasis>)</title></info>
+    <indexterm><primary>Sprünge</primary></indexterm>
+    <indexterm><primary>Branches</primary></indexterm>
+    <indexterm><primary>Label</primary></indexterm>
+    <para>
+        Dieses Kapitel ist für <emphasis>Stirb langsam</emphasis> &sed;-Programmierer
+        (frei aus dem Englischen übersetzt) geschrieben.
+    </para>
+    <section xml:id="sec-spruenge-kommandos"><info><title>Sprungkommandos</title></info>
+        <indexterm><primary>Kommando</primary><secondary>:</secondary></indexterm>
+        <para>
+            Sprungziele (<emphasis>labels</emphasis>) werden durch einen Doppelpunkt, gefolgt vom Namen des Labels gekennzeichnet
+            '<literal>: <replaceable>label</replaceable></literal>' wobei <replaceable>label</replaceable> ein beliebiger Name sein kann.
+            Einen <emphasis>unbedingten Sprung</emphasis> (es wird also immer gesprungen) kennzeichnet man mit
+            '<literal>b <replaceable>label</replaceable></literal>' (b für branch).
+            <indexterm><primary>Kommando</primary><secondary>b</secondary></indexterm>
+            Das Sprungziel <replaceable>label</replaceable> muss natürlich irgendwo im Script definiert sein.
+            Wird kein Label angegeben, dann fängt unmittelbar der nächste Zyklus an.
+            Das Kommando '<literal>t <replaceable>label</replaceable></literal>' definiert einen <emphasis>bedingten Sprung</emphasis>.
+            <indexterm><primary>Kommando</primary><secondary>t</secondary></indexterm>
+            Gesprungen wird, wenn im aktuellen Zyklus eine erfolgreiche Substitution ('<literal>s///</literal>'-Befehl)
+            durchgeführt werden konnte und außerdem seither kein '<literal>t</literal>'-Sprung durchgeführt wurde.
+            Auch hier gilt, wenn das Sprungziel nicht angegeben wurde, beginnt ein neuer Zyklus.
+        </para>
+        <para>
+            Das sind alle Kommandos in diesem Zusammenhang. In diesem Sinne kann man &sed; als echten
+            <acronym>RISC</acronym>-Editor bezeichnen (<acronym>RISC</acronym> = Reduced Instruction Set Computer).
+        </para>
+        <para>
+            Achtung bei der Verwendung von '<literal>t</literal>', die manches Kopfzerbrechen bereiten kann.
+            <indexterm><primary>Kommando</primary><secondary>t</secondary></indexterm>
+            Das Große Reformations-Script soll dies verdeutlichen.
+<programlisting>#!/bin/sed -f
+s/foo/bar/g
+s/Bayern/Bayern/g;t noconversion
+s/Katholik/Protestant/g
+s/kathol/luther/g
+: noconversion
+# und weiter gehts im Code
+</programlisting>
+        Außer der Tatsache, dass man mit einem '<literal>/Bayern/!{...}</literal>' besser bedient wäre,
+        sollte der Sinn des Scriptes klar sein: In jenen Zeilen, in denen das Wort 'Bayern' nicht vorkommt,
+        soll alles Katholische durch Protestantisches ersetzt werden.
+        Das eigentlich nutzlose '<literal>s/Bayern/Bayern/g</literal>' stellt die Bedingung für den nachfolgenden Sprung dar.
+        Diese Zeile alleine? Nein, denn das Kommando '<literal>s/foo/bar/g</literal>' kann genau so gut ausgeführt
+        werden und den 2 Zeilen entfernten Sprung einleiten.
+        Denn obwohl dies durch die eigenwillige Formatierung des Scriptes so aussieht, ist das '<literal>t</literal>'
+        Kommando nicht exklusiv an das unmittelbar davor stehende Kommando gebunden.
+        Um einen Seiteneffekt durch das 'foo-bar' Kommando zu vermeiden sollte man es tunlichst irgendwo unterhalb des
+        Sprungkommandos unterbringen oder wenn das nicht möglich ist, dann muss ein
+        <emphasis>dummy</emphasis>-Sprung eingeführt werden.
+<programlisting>#!/bin/sed -f
+s/foo/bar/g
+t dummy
+: dummy
+s/Bayern/Bayern/g;t noconversion
+s/Katholik/Protestant/g
+s/kathol/luther/g
+: noconversion
+# und weiter gehts im Code
+</programlisting>
+        </para>
+    </section>
+
+    <section xml:id="sec-spruenge-andere"><info><title>Andere Sprünge</title></info>
+        <para>
+            Auch andere Befehle wie '<literal>q</literal>', '<literal>d</literal>' und '<literal>D</literal>'
+            (bei Dateiende auch '<literal>n</literal>' und '<literal>N</literal>') verändern den Programmfluss.
+            Bedacht eingesetzt, kann man mit den Sprungbefehlen von &sed; ziemlich komplexe Programme schreiben.
+            Unbedacht eingesetzt, kann man unnötigerweise noch viel komplexere Programme schreiben.
+            <indexterm><primary>Kommando</primary><secondary>q</secondary></indexterm>
+            <indexterm><primary>Kommando</primary><secondary>d</secondary></indexterm>
+            <indexterm><primary>Kommando</primary><secondary>D</secondary></indexterm>
+            <indexterm><primary>Kommando</primary><secondary>n</secondary></indexterm>
+        </para>
+    </section>
+</chapter>
+
+<chapter xml:id="sec-vermischtes"><info><title>Vermischtes</title></info>
+    <section xml:id="sec-vermischtes-dateien"><info><title>Dateien</title></info>
+        <para>
+            Mit &sed; kann man auch Dateien lesen und schreiben.
+            Das geht mit den den Kommandos '<literal>r</literal> <replaceable>filename</replaceable>' und '<literal>w</literal> <replaceable>filename</replaceable>'.
+            <indexterm><primary>Kommando</primary><secondary>r</secondary></indexterm>
+            Beim Lesen wird die Datei nach dem gegenwärtigen Zyklus ausgegeben, oder wenn eine neue Zeile gelesen wird.
+            Eine nicht vorhandene Datei wird als existent aber leer angesehen. Der '<literal>w</literal>' legt eine neue
+            <indexterm><primary>Kommando</primary><secondary>w</secondary></indexterm>
+            Datei an oder <emphasis>überschreibt</emphasis> eine schon vorhandene Datei und füllt sie mit dem
+            Inhalt des &patspace;. Das Kommando '<literal>w</literal>' kann auch als
+            Flag zu '<literal>s///</literal>' angegeben werden, wobei in die Datei geschrieben wurde, wenn eine
+            Substitution erfolgen konnte.
+        </para>
+        <para>
+            Das folgende &sed;-Script ist ein Ersatz für den <acronym>UNIX</acronym>-Befehl
+            '<command>tee</command> <emphasis>dateiname</emphasis>',
+            <programlisting>sed -e 'w<emphasis> dateiname</emphasis>'</programlisting>
+            und wenn man es in der Form '<literal>sed wdateiname</literal>' schreibt, nur um ein 'w' länger als die
+            Version mit <command>tee</command>
+        </para>
+        <para>
+            Um den Einsatz des Kommandos '<literal>r</literal>' zu demonstrieren möchte ich meinen
+            <emphasis>Tante Amalien</emphasis>-Emulator vorstellen (der von Joseph Weizenbaums genialem
+            <acronym>ELIZA</acronym> inspiriert ist). Meine Tante Amalie hat 3 Standardsätze die sie der
+            Reihe nach verwendet. Diese sind 'Meinst du?', 'Früher war es besser - entschieden besser!' und
+            'Davon verstehst du nichts.'.
+            Diese in die 3 Dateien <literal>stdsatz1</literal> - <literal>stdsatz3</literal> geschrieben ergeben mit
+            dem (unportablen!) Script
+            <indexterm><primary>Adresse</primary><secondary>~</secondary></indexterm>
+<programlisting>#!/bin/sed -nf
+1~3r stdsatz1
+2~3r stdsatz2
+3~3r stdsatz3
+</programlisting>
+            das interessante Gespräch
+<screen>Schönes Wetter heute
+Meinst du?
+Ja natürlich. Schau doch raus!
+Früher war es besser - entschieden besser!
+Ich weiß nicht was du hast - blauer Himmel und strahlender Sonnenschein.
+Davon verstehst du nichts.
+Wie du meinst, Amalie.
+Meinst du?
+</screen>
+            usw. Ich könnte mich stundenlang mit Amalie unterhalten. Für komplexere Charaktere wäre es denkbar,
+            den Input nach bestimmten Mustern zu durchsuchen und dementsprechend zu reagieren.
+            Dabei muss ja nicht jede Antwort in einem File gespeichert sein, man könnte ja den
+            &patspace; mit '<literal>s/^.*$/Antwort/p</literal>' füllen.
+        </para>
+    </section>
+
+    <section xml:id="sec-vermischtes-more"><info><title>Noch mehr Kommandos</title></info>
+        <indexterm><primary>Kommando</primary><secondary>a</secondary></indexterm>
+        <indexterm><primary>Kommando</primary><secondary>i</secondary></indexterm>
+        <indexterm><primary>Kommando</primary><secondary>c</secondary></indexterm>
+        <indexterm><primary>Kommando</primary><secondary>l</secondary></indexterm>
+        <para>
+            &sed; kennt noch einige meines Erachtens recht exotische Befehle wie
+            '<literal>a</literal>', '<literal>i</literal>' und '<literal>c</literal>', welche einen gegebenen Text
+            ausgeben oder '<literal>l</literal>', welcher nicht druckbare Zeichen im
+            &patspace; in ihrer <acronym>ANSI C</acronym>-Notation ausgibt und noch derer mehr.
+            Sollten diese gebraucht werden, dann gibt die info-page bereitwillig Auskunft dazu.
+        </para>
+    </section>
+
+    <section xml:id="sec-vermischtes-shakespeare"><info><title>&sed; oder nicht &sed;?</title></info>
+        <para>
+            Carlos Jorge G.duarte emuliert in seinem Tutorial sehr viele <acronym>UNIX</acronym>-Befehle mit
+            &sed;. Das mag als Beispiel sehr interessant sein (und ich empfehle jedem, diese
+            Programme anzuschauen und zu verstehen), ist aber in der Praxis zu kompliziert.
+            &sed; eignet sich durch die kompakte Schreibweise seiner Scripte besonders gut
+            für Einzeiler - wird das Problem größer, kann das Debuggen eines &sed;-Scriptes
+            sehr nervenaufreibend sein.
+            <indexterm><primary>awk</primary></indexterm>
+            Eine sehr gute Alternative ist da <command>awk</command>, das eine ähnliche Syntax
+            (<literal>/regex/{action}</literal>) unterstützt, darüber hinaus noch strukturierte Programme
+            (mit Konstrukten wie <literal>'if (expr) statement else statement'</literal> oder
+            '<literal>while (expr) statement</literal>' u.Ä.) erlaubt, Funktionen zur Mustersuche, eigene Typen zur
+            Behandlung von Gleitkommazahlen und vieles mehr besitzt. Leider kennt es die sehr bequemen '<literal>\1</literal>'
+            Referenzen nicht, die &sed; bietet. <command>awk</command>-Programme sind in der
+            Regel 3-10 mal so groß wie &sed;-Scripte.
+        </para>
+        <indexterm><primary>Python</primary></indexterm>
+        <indexterm><primary>perl</primary></indexterm>
+        <para>
+            <command>Python</command> oder <command>perl</command> bemüht man für größere und komplexere Probleme.
+            Damit kann man ausgewachsene Programme schreiben, die zur Laufzeit interpretiert werden, wodurch sie etwas langsamer
+            als &sed;- oder <command>awk</command>-Scripte abgearbeitet werden.
+            Die Scripte können ungefähr die 8-40-fache Größe eines äquivalenten &sed;-Scriptes haben.
+            Das muss kein Nachteil sein, denn die verlorene Zeit die ein mittelmäßiges
+            <command>Python</command>-Script zur Laufzeit gegenüber einem &sed;-Script verliert,
+            ist meistens durch eine lange Fehlersuche während des Schreibens eines solchen mehr als wett gemacht.
+        </para>
+        <para>
+            <emphasis>Keines</emphasis> dieser Tools soll verwendet werden, wenn das Betriebssystem ein dediziertes
+            Programm für das jeweilige Problem bereitstellt, da dieses meist schneller und sicherer arbeitet und
+            obendrein noch einfacher zu bedienen ist. <acronym>UNIX</acronym> bietet eine Vielzahl solcher Helferchen,
+            die aber meistens nur einseitig oder überhaupt nicht verwendet werden.
+            Ein Blick in die man-pages zu <command>bash</command>/<command>tcsh</command>, <command>xargs</command>,
+            <command>tr</command>, <command>test</command>/<command>[</command>, <command>cat</command>/<command>tac</command>,
+            <command>cut</command>, <command>[ef]grep</command>, <command>uniq</command>, <command>sort</command>,
+            <command>wc</command>, <command>tail</command>, <command>column</command>/<command>colrm</command>,
+            <command>paste</command>, <command>look</command>, <command>hexdump</command>, <command>basename</command>
+            und Kumpanen, <command>seq</command>, <command>luser</command>, <command>lart</command>,
+            <command>whack</command>, <command>bosskill</command>,
+            [...] kann dem geneigten Leser nur zum Nutzen gereichen.
+        </para>
+    </section>
+    <section xml:id="sec-vermischtes-other"><info><title>Andere Programme mit &sed;-Kommandos</title></info>
+        <indexterm><primary>vi</primary></indexterm>
+        <indexterm><primary>vim</primary></indexterm>
+        <para>
+            Das meistverwendetste Programm, in dem man &sed;-Anweisungen angeben kann, ist sicher <command>vi</command>.
+            Um beispielsweise in einer Zeile "bla" nach "blupp" zu ändern, schreibt man
+            <programlisting>:s/bla/blubb/g</programlisting>
+            Ein interessantes Flag zum <literal>s///</literal>-Kommando ist <literal>c</literal>, welches bewirkt, dass man bei
+            jeder potentiellen Substitution um Bestätigung gefragt wird.
+            Ein Blick in die Dokumentation von <command>vi</command> (<command>vim</command>) zu weiteren
+            &sed;-Kommandos lohnt sich.
+        </para>
+        <indexterm><primary>ed</primary></indexterm>
+        <para>
+            <command>ed</command> ist ein vollständiger Editor, und älter als &sed;.
+            <command>ed</command> ist die richtige Wahl, wenn man Texte inline-editieren will. Zu beachten ist, dass,
+            im Gegensatz zu &sed;, die Datei <emphasis>nicht</emphasis> tumb einmal von oben nach
+            unten durchgeackert und eine Anweisung damit auf alle Zeilen angewandt wird.
+            Das Kommando <programlisting>s/bla/blupp/g</programlisting> wird in <command>ed</command>
+            nur auf die aktuelle Zeile angewandt. Der gewünschte Effekt wird mit
+            <programlisting>%s/bla/blubb/g</programlisting> erreicht.
+            Ein anderes neues Kommando is <literal>g/re/command</literal>.
+            Es wendet das Kommando auf alle jene Zeilen an, auf welche der Reguläre Ausdruck 're' passt.
+            Ein Beispiel dafür ist <literal>g/re/p</literal>, welche alle Zeilen ausgibt, welche auf die RE passen.
+        </para>
+        <indexterm><primary>grep</primary></indexterm>
+        <note>
+            Eine geschichtliche Randnotiz: das <acronym>UNIX</acronym>-Kommando <command>grep</command> wurde bequemlichkeitshalber aus
+            <command>ed</command> extrahiert, und der Name deutet an, was das Programm tut: global, Regular Expression, print.
+        </note>
+    </section>
+</chapter>
+
+<!-- FIXME bis hierher -->
+<chapter xml:id="sec-beispiele"><info><title>Ein paar Beispiele</title></info>
+    <para>
+        Diese Sektion sollte mehr Beispiele enthalten. Ich bin ständig auf der Suche nach Beispielen, welche zum
+        Verständnis von &sed; beitragen.
+        Sollte der Leser Scripte wissen, die mit noch nicht vorgestellten Tricks arbeiten, welche eines Kommentars bedürfen,
+        einem ganze Mannjahre an Handarbeit ersparen, einfach nur schön sind oder irgend einen anderen
+        AHA!-Effekt auszulösen imstande sind, so bitte ich darum, mir diese zu schicken.
+        Sie werden mit Angabe des Autors hier veröffentlicht.
+    </para>
+    <para>
+        In diesem Kapitel werden die <acronym>GNU</acronym>-Erweiterungen scham- und vor allem kommentarlos verwendet,
+        da sie die Lesbarkeit eines Scriptes sehr verbessern.
+        Die Beispiele ließen sich auch ohne diese Erweiterungen beschreiben (und es wird empfohlen das auch zu
+        tun, sobald ein Script auf andere Systeme übertragen werden könnte) das ginge aber auf Kosten der
+        Verständlichkeit.
+    </para>
+    <section xml:id="sec-vermischtes-nocomment"><info><title>Entfernen von Kommentaren</title></info>
+        <para>
+            Die fiktiven Hochsprachen der 5. Generation <acronym>K</acronym> und <acronym>K++</acronym> kennen zwei Arten von Kommentaren.
+            Da wäre die nur in <acronym>K++</acronym> verwendete Art '<literal>kk.*</literal>' (zwei einleitende 'k'),
+            oder die in beiden Sprachen verwendete Form '<literal>ko.*ok</literal>', wobei sich ein solcher
+            Kommentar über mehrere Zeilen erstrecken kann. Es soll ein &sed;-Script erstellt werden,
+            das solche Kommentare (warum auch immer!) entfernen soll.
+        </para>
+        <para>
+            Das Entfernen von <acronym>K</acronym>-Kommentaren benötigt ein paar Erklärungen.
+            Nehmen wir einmal an, wir hätten den gesamten Kommentar im &patspace;.
+            Das Kommando '<literal>s/ko.*ok//</literal>' geht aus dem Grund nicht, weil die ansonsten nützliche
+            Eigenschaft von REs, den längsten zutreffenden String zu nehmen, hier unerwünscht ist.
+            Sind zwei vollständige Kommentare in einer Zeile vorhanden, dann würde auch der unschuldigerweise
+            <emphasis>dazwischen</emphasis> stehende Code entfernt werden.
+        </para>
+        <para>
+            Der zweite Anlauf ist ein '<literal>s/ko\([^o][^k]\)*ok//g</literal>'. Achtung bei Konstrukten,
+            welche Quantifikatoren ('<literal>*</literal>', '<literal>\+</literal>', '<literal>\{\}</literal>' ...) auf zwei oder
+            mehrere Zeichen anwenden! Das Script arbeitet nur bei der Hälfte der Kommentare, und zwar bei jener
+            Hälfte welche eine gerade Anzahl von Zeichen beinhaltet.
+            Vom Zorn gepackt, schreibt man dann Sachen wie '<literal>s/ko\([^o]*\(o[^k]\)*[^o]*\)*ok//g</literal>'
+            welche zwar korrekt sind, aber völlig Praxisuntauglich.
+            Ein solches Monsterprogramm kann allerhöchstens auf einem Großrechner vernünftig arbeiten.
+            In diesen Situationen hilft es, eine verbale Beschreibung des Musters zu finden.
+            Die könnte so aussehen: "Ein K-Kommentar beginnt mit 'ko', ihm folgen null oder mehr der oben
+            beschriebenen Lesevorgängen <literal>[^o]\|o\+[^ok]</literal> plus einem Abschluss <literal>o\+k</literal>'.
+            Auf &sed;isch übersetzt bekommt man '<literal>ko\([^o]\|o\+[^ok]\)*o\+k</literal>'.
+        </para>
+        <para>
+            Nun muss nur noch sicher gestellt werden, dass nach einem 'ko'-Muster auch ein 'ok' im
+            &patspace; ist. Ist dem nicht so, dann sorgt der innere Loop
+            (um das label <literal>append</literal>) dafür, dass ständig neue Zeilen mit dem
+            '<literal>N</literal>'-Befehl an den &patspace; angehängt werden.
+            Ein äußerer Loop (um das label <literal>test</literal>) sorgt dafür dass jene Zeilen
+            richtig behandelt werden, in denen ein Kommentar geschlossen und anschließend ein neues
+            mehrzeiligen Kommentar wieder aufgemacht wird.
+        </para>
+<programlisting>#!/bin/sed -f
+
+#lösche K++-Kommentare
+/^[[:blank:]]*kk.*/d
+s/kk.*//g
+
+#Wenn kein Kommentar gefunden wurde, dann nächster Zyklus.
+: test
+/ko/!b
+
+#Hänge so lange neue Zeilen an den &patspace; an,
+#bis ein vollständiger Kommentar zusammengebracht wurde.
+: append
+/ok/!{N;b append;}
+
+#lösche K-Kommentare die sich vollständig im &patspace; befinden
+s/ko\([^o]\|o\+[^ok]\)*o\+k//g
+
+t test
+</programlisting>
+        <para>
+            Soll das Script für in den archaischen Sprachen <acronym>C/C++</acronym> geschriebene Programme funktionieren,
+            dann muss man es mit dem &sed;-(Pseudo-)Einzeiler
+            '<literal>sed -e '/^#/!{s/k/\//g;s/o/\*/g;}' k-kommentar &gt; c-kommentar</literal>' ummodeln.
+        </para>
+        <para>
+            Ein K-Kommentar beginnt mit '<literal>ko</literal>', soweit ist alles klar.
+            Anschließend folgt die längst mögliche Zeichenkette, die kein '<literal>ok</literal>' enthält.
+            Hier liegt der Hund begraben. Das abschließende '<literal>ok</literal>' ist wieder trivial.
+        </para>
+        <para>
+            Nun zum Hund: Gesucht ist die längst mögliche Zeichenkette, auf welche der reguläre
+            Ausdruck /<literal>ok/</literal> <emphasis>nicht</emphasis> zutrifft.
+            Es ist also gewissermaßen das Gegenteil von <literal>/ok/</literal> gesucht.
+        </para>
+        <para>
+            Man kann sich nun in Anlehnung an ein prozedurales Vorgehen vorstellen, man suche das erste Auftreten von
+            '<literal>ok</literal>' innerhalb einer Zeichenkette. Dazu lese man immerwieder neue Zeichen von der
+            Zeichenkette ein und untersuche die eingelesenen Zeichen.
+        </para>
+        <para>
+            Die gesuchte Teil-Zeichenkette besteht dann aus null oder mehreren "Lesevorgängen":
+            <emphasis>Längste Zeichenkette ohne '<literal>ok</literal>' = \(Lesevorgang\)*</emphasis>
+        </para>
+        <para>
+            Nach jedem Lesevorgang trifft man dann eine Fallunterscheidung, etwa von der Art:
+            Es wurde kein '<literal>o'</literal> eingelesen, es wurde ein '<literal>o</literal>' aber kein
+            '<literal>k</literal>' eingelesen, etc. Man erhält so:
+            <programlisting>Lesevorgang = Fall_1 \| Fall_2 \| ... \| Fall_x</programlisting>
+        </para>
+        <para>
+            Wieder in Anlehnung an das prozedurale Vorgehen wird man zu Beginn der Überlegungen davon ausgehen,
+            es werde pro Lesevorgang nur ein einzelnes Zeichen eingelesen. Ist dieses Zeichen dann von '<literal>o</literal>'
+            verschieden, trifft also der Ausdruck [<literal>^o]</literal> darauf zu, kann kann man mit dem
+            nächsten Lesevorgang fortfahren, und man hat:
+            <programlisting>Fall_1 = [^o]</programlisting>
+        </para>
+        <para>
+            Ist das eingelesene Zeichen hingegen gleich '<literal>o</literal>', dann könnte man in die Versuchung
+            kommen zu prüfen, ob sich das nächste Zeichen von '<literal>k</literal>' unterscheidet,
+            in der Annahme, damit einen weiteren Fall eines Lesevorganges vollständig abgehandelt zu haben:
+            Den Fall <literal>o[^k]</literal> nämlich! Träfe dieser reguläre Ausdruck auf die
+            immerhin bereits zwei eingelesenen Zeichen zu, dann ginge man zum nächsten Lesevorgang über.
+        </para>
+        <para>
+            Aber hoppla! Das vorhin auf <literal>[^k]</literal> überprüfte Zeichen könnte ja
+            wieder gleich 'o' sein, was zur Folge hätte, dass man beim nächsten Lesevorgang
+            das zuerst eingelesene Zeichen auf auf '<literal>k</literal>' überprüfen müsste.
+            Solche Abhängigkeiten zwischen den Lesevorgängen sprengen aber das Konzept dieser
+            Vorgehensweise und deuten darauf hin, dass der vorhergehende Lesevorgang im Prinzip weiter
+            geführt werden muss.
+        </para>
+        <para>
+            Ist das erste Zeichen eines Lesevorganges also ein '<literal>o</literal>', dann könnte
+            diesem '<literal>o</literal>' gleich eine ganze Folge weiterer '<literal>o</literal>'s folgen.
+            Man muss also einen Ausdruck der Form <literal>o\+</literal> einlesen, und zwar solange,
+            bis man endlich ein Zeichen findet, das sich von '<literal>o</literal>' unterscheidet.
+            Ist dann dieses Zeichen nicht nur von '<literal>o</literal>', sondern auch von '<literal>k</literal>'
+            verschieden, dann hat man insgesamt einen Ausdruck der Form <literal>o\+[^ok]</literal> eingelesen:
+            <programlisting>Fall_2 = o\+[^ok]</programlisting>
+        </para>
+        <para>
+            Von da aus kann man nun problemlos mit dem nächsten Lesevorgang fortfahren.
+            Da das erste Zeichen aber nur entweder '<literal>o</literal>' oder dann eben nicht '<literal>o</literal>'
+            sein kein, treten neben Fall_1 und Fall_2 keine weiteren Fälle mehr hinzu:
+            <programlisting>Lesevorgang = Fall_1 \| Fall_2 = [^o]\|o\+[^ok]</programlisting>
+        </para>
+        <para>
+            Bei jedem Lesevorgang findet man also ein einzelnes Zeichen <literal>[^o]</literal> oder einen Ausdruck
+            <literal>o\+[^ok]</literal>. Erst wenn eine '<literal>o</literal>-Folge" mit dem Zeichen '<literal>k</literal>' endet,
+            wenn man also auf den "Abschluss" <literal>o\+k</literal> trifft, ist man am Ende.
+        </para>
+        <para>
+            Die null oder mehr Lesevorgänge <literal>[^o]\|o\+[^ok]</literal> liefern damit die längste Zeichenkette,
+            die den Abschluss <literal>o\+k</literal> nicht enthalten.
+            Obwohl damit das anfängliche Ziel, die längste Zeichenkette ohne '<literal>ok</literal>' zu finden,
+            knapp verfehlt worden ist, kann man mit diesen Überlegungen bequem den letztlich gesuchten Ausdruck eines
+            K-Kommentars hinschreiben:
+            <emphasis>Ein K-Kommentar beginnt mit '<literal>ko</literal>', ihm folgen null oder mehr der oben beschriebenen
+            Lesevorgängen <literal>[^o]\|o\+[^ok]</literal> plus einem Abschluss <literal>o\+k</literal></emphasis>:
+            <programlisting>K-Kommentar = ko\([^o]\|o\+[^ok]\)*o\+k</programlisting>
+        </para>
+        <para>
+            Übrigens kann man mit dem bekannten Editor vim einen K-Kommentar einfach durch
+            <programlisting>K-Kommentar = ko.\{-}ok</programlisting>
+            definieren. Dabei bedeutet der Ausdruck <literal>.\{-}</literal>, dass ähnlich wie bei <literal>.*</literal>
+            eine beliebige Zeichenkette gesucht ist, aber nicht längste, sondern die kürzeste.
+        </para>
+        <para>
+            Vielen herzlichen Dank an Mathias Michaelis für dessen Beitrag zu diesem Tipp.
+        </para>
+    </section>
+
+    <section xml:id="sec-vermischtes-elleff"><info><title><emphasis>elleff</emphasis>-Rücktransformation</title></info>
+        <para>
+            <indexterm><primary>elleff-Sprache</primary><secondary>Rücktransformation</secondary></indexterm>
+            Gelogen habe ich nicht, als ich behauptete, mit REs könne man keinen <emphasis>elleff</emphasis>-verschlüsselten
+            Vokal beschreiben - das stimmt schon. Aber &sed; kann.
+            Und das auf eine sehr trickreiche Weise. Zuerst das Script, kommentiert wird danach.
+            <programlisting>sed -e 's/\([aeiou]\+\)l\1f\1/\1/g'</programlisting>
+            Wenn man diesen Kniff nicht schon einmal gesehen hat, muss man 2 (ich 3) mal hinschauen um zu verstehen,
+            warum das funktioniert. Was mir an diesem Beispiel so gut gefällt ist, dass sobald die Klammer
+            geschlossen wird, der Inhalt der eingeschlossenen Region schon in '<literal>\1</literal>' bereit steht
+            und somit verwendet werden kann - auch innerhalb der RE. Die RE wird somit zur Laufzeit
+            verändert. Das zeigt einerseits wie leistungsfähig &sed; ist und andererseits
+            dass es auch manchmal recht knifflig sein kann die Scripte anderer zu verstehen.
+        </para>
+        <para>
+            Diesen Trick verdanke ich Carlos Duarte - ein weiterer Anreiz, in sein
+            <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://sed.sourceforge.net/grabbag/tutorials/do_it_with_sed.txt">sed tutorial</link> hineinzuschauen.
+        </para>
+    </section>
+
+    <section xml:id="sec-vermischtes-klammern"><info><title>Verschachtelte Klammern</title></info>
+        <para>
+            In manchen Fällen muss man auf das <replaceable>n</replaceable>-te Feld einer Zeile zugreifen.
+            Die Quantifikatoren '<literal>\{<replaceable>n</replaceable>\}</literal>' sind dabei sehr nützlich. Will man beispielsweise das 3.
+            Wort einer Zeile an den Zeilenanfang setzen, ist das Konstrukt
+            <programlisting>sed -e 's/^\([^ ]* *\)\{2\}\([^ ]* \)/\2\1/g'</programlisting>
+            nicht richtig, da die Referenz '<literal>\1</literal>' nur das zweite Wort enthält, nicht aber das erste und zweite.
+            Abhilfe schafft da ein weiteres Klammernpaar, wie im folgenden Script:
+            <programlisting>sed -e 's/^\(\([^ ]* *\)\{2\}\)\([^ ]* \)/\3\1/g'</programlisting>
+            Dabei ist '<literal>\3</literal>' die Referenz auf das zweite Wort ('<literal>\2</literal>' referenziert das letzte
+            Wort in '<literal>\1</literal>').
+            Hierbei ist man schon an die Grenzen der Verständlichkeit eines &sed;-Scriptes gegangen,
+            und es ist zu überlegen, ob man mit anderen Programmen wie zum Beispiel
+            <command>awk</command> nicht besser bedient ist.
+        </para>
+        <para>
+            Danke an Tillmann Bitterberg für diesen Tip.
+        </para>
+    </section>
+</chapter>
+
+
+<chapter xml:id="sec-kurzreferenz"><info><title>Kurzreferenz</title></info>
+    <para>
+        Diese Kurzreferenz kann und will nicht die man- oder info-page zu &sed; ersetzen, sondern ist nur als
+        eine Gedächtnisstütze gedacht.
+    </para>
+    <section xml:id="sec-vermischtes-adressen"><info><title>Adressen</title></info>
+        <indexterm><primary>Adresse</primary></indexterm>
+        <para>
+            &sed; kann mehrere Dateien abarbeiten, wenn man diese als Argumente übergibt.
+            Diese Dateien werden als ein einziger input-stream behandelt.
+            Achtung deshalb bei Zeilenangaben. Die Adresse '<literal>1</literal>' gibt deshalb nicht die erste Zeile in jeder Datei an,
+            sondern die erste Zeile im input-stream; der nachfolgende Befehl wird also nur einmal ausgeführt.
+            <table xml:id="adressen" frame="topbot" pgwide="0"><info><title>Adressen</title></info>
+            <tgroup cols="2" align="left" colsep="0" rowsep="0">
+            <colspec colnum="1" colname="col1" colwidth="1*"/>
+            <colspec colnum="2" colname="col2" colwidth="2*"/>
+            <thead>
+                <row><entry>Adresse</entry><entry>Beschreibung</entry></row>
+            </thead>
+            <tbody>
+                <row>
+                    <entry><literal><replaceable>n</replaceable></literal>
+                        <indexterm><primary>Adresse</primary><secondary><replaceable>n</replaceable> (Nummer)</secondary></indexterm>
+                    </entry>
+                    <entry>Selektiert die Zeile <replaceable>n</replaceable> im Eingabestream.</entry>
+                </row>
+                <row>
+                    <entry><literal>$</literal>
+                        <indexterm><primary>Adresse</primary><secondary>$</secondary></indexterm>
+                    </entry>
+                    <entry>Letzte Zeile im input-stream.</entry>
+                </row>
+                <row>
+                    <entry><literal>/<replaceable>regex</replaceable>/</literal>
+                        <indexterm><primary>Adresse</primary><secondary><literal>/<replaceable>regex</replaceable>/</literal></secondary></indexterm>
+                    </entry>
+                    <entry>Alle Zeilen, auf die <replaceable>regex</replaceable> passt.
+                        Alternativ kann auch '\%<replaceable>regex</replaceable>\%' geschrieben werden, wobei '<literal>%</literal>' ein beliebiges Zeichen ist.</entry>
+                </row>
+                <row>
+                    <entry><literal><replaceable>adresse1</replaceable>,<replaceable>adresse2</replaceable></literal>
+                        <indexterm><primary>Adresse</primary><secondary><literal><replaceable>adresse1</replaceable>,<replaceable>adresse2</replaceable></literal></secondary></indexterm>
+                    </entry>
+                    <entry>Adressbereich: Alle Zeilen zwischen <replaceable>adresse1</replaceable> und <replaceable>adresse2</replaceable>,
+                        einschließlich der beiden Adressen.</entry>
+                </row>
+                <row>
+                    <entry><literal><replaceable>adresse</replaceable>!</literal>
+                        <indexterm><primary>Adresse</primary><secondary><literal>!</literal></secondary></indexterm>
+                    </entry>
+                    <entry>Alle Zeilen ausschließlich der in <replaceable>adresse</replaceable> angegebenen Zeilen.</entry>
+                </row>
+            </tbody></tgroup></table>
+        </para>
+    </section>
+
+    <section xml:id="sec-vermischtes-kommandos"><info><title>Kommandos</title></info>
+        <indexterm><primary>Kommando</primary></indexterm>
+        <para>
+            <table xml:id="tbl-allgemeine-kommandos" frame="topbot" pgwide="0"><info><title>Allgemeine Kommandos</title></info>
+            <tgroup cols="3" align="left" colsep="0" rowsep="0">
+            <colspec colnum="1" colname="col1" colwidth="3*"/>
+            <colspec colnum="2" colname="col2" colwidth="2*"/>
+            <colspec colnum="3" colname="col3" colwidth="8*"/>
+            <thead>
+                <row><entry>Kommando</entry><entry>Anzahl Adressen</entry><entry>Beschreibung</entry></row>
+            </thead>
+            <tbody>
+                <row>
+                    <entry><literal>#</literal><indexterm><primary>Kommando</primary><secondary>#</secondary></indexterm></entry>
+                    <entry>0</entry>
+                    <entry>Kommentar, alle nachfolgenden Zeichen bis zum Newline werden nicht als Programmcode interpretiert.</entry>
+                </row>
+                <row>
+                    <entry><literal>{</literal><indexterm><primary>Kommando</primary><secondary>{}</secondary></indexterm></entry>
+                    <entry>0-2</entry>
+                    <entry>Beginnt einen Block, der mehrere Kommandos beinhalten kann. Muss mit <literal>}</literal> abgeschlossen werden. Auf jedes Kommando innerhalb des Blocks muss ein <emphasis>semicolon</emphasis> '<literal>;</literal>' folgen.</entry>
+                </row>
+                <row>
+                    <entry><literal>=</literal><indexterm><primary>Kommando</primary><secondary>=</secondary></indexterm></entry>
+                    <entry>0-1</entry>
+                    <entry>Schreibt die aktuelle Position im Input-stream.</entry>
+                </row>
+                <row>
+                    <entry><literal>q</literal><indexterm><primary>Kommando</primary><secondary>q</secondary></indexterm></entry>
+                    <entry>0-1</entry>
+                    <entry>Beendet das Programm. Der &patspace; wird nur dann geschrieben, wenn die Option <option>-n</option> nicht gesetzt wurde.</entry>
+                </row>
+                <row>
+                    <entry><literal>l</literal><indexterm><primary>Kommando</primary><secondary>l</secondary></indexterm></entry>
+                    <entry>0-2</entry>
+                    <entry>Schreibt den &patspace; in C-Notation.</entry>
+                </row>
+                <row>
+                    <entry><literal>d</literal><indexterm><primary>Kommando</primary><secondary>d</secondary></indexterm></entry>
+                    <entry>0-2</entry>
+                    <entry>Löscht den &patspace; und startet sofort einen neuen Zyklus.</entry>
+                </row>
+                <row>
+                    <entry><literal>p</literal><indexterm><primary>Kommando</primary><secondary>p</secondary></indexterm></entry>
+                    <entry>0-2</entry>
+                    <entry>Schreibt den &patspace; nach &stdout;. (wird normalerweise nur in Verbindung mit der Option <option>-n</option> verwendet.)</entry>
+                </row>
+                <row>
+                    <entry><literal>n</literal><indexterm><primary>Kommando</primary><secondary>n</secondary></indexterm></entry>
+                    <entry>0-2</entry>
+                    <entry>Schreibt den &patspace; (wenn <option>-n</option> nicht gesetzt ist) und ersetze den &patspace; mit der nächsten Zeile. Wenn keine Zeile mehr zu lesen ist, beende das Programm.</entry>
+                </row>
+                <row>
+                    <entry><literal>s/<replaceable>regex</replaceable>/<replaceable>rpl</replaceable>/<replaceable>flg</replaceable></literal><indexterm><primary>Kommando</primary><secondary>s</secondary></indexterm></entry>
+                    <entry>0-2</entry>
+                    <entry>Ersetzt <replaceable>regex</replaceable> durch <replaceable>rpl</replaceable>. Null oder mehrere <replaceable>flg</replaceable> geben an, wie das geschehen soll: '<literal>g</literal>' ersetzt alle Zeichenketten in einer Zeile, auf die <replaceable>regex</replaceable> passt, '<literal>p</literal>' führt eine Substitution durch und schreibt den &patspace;, '<replaceable>nummer</replaceable>' ersetzt nur die <replaceable>nummer</replaceable>-te Fundstelle.</entry>
+                </row>
+                <row>
+                    <entry><literal>y/<replaceable>src</replaceable>/<replaceable>rpl</replaceable>/<replaceable>flg</replaceable></literal><indexterm><primary>Kommando</primary><secondary>y</secondary></indexterm></entry>
+                    <entry>0-2</entry>
+                    <entry>Ersetzt jedes Zeichen im &patspace;, das in <replaceable>src</replaceable> vorkommt, mit dem entsprechenden Zeichen in <replaceable>rpl</replaceable>.</entry>
+                </row>
+            </tbody></tgroup></table>
+
+            <table xml:id="tbl-sprung-kommandos" frame="topbot" pgwide="0"><info><title>Sprung-Kommandos</title></info>
+            <tgroup cols="3" align="left" colsep="0" rowsep="0">
+            <colspec colnum="1" colname="col1" colwidth="3*"/>
+            <colspec colnum="2" colname="col2" colwidth="2*"/>
+            <colspec colnum="3" colname="col3" colwidth="8*"/>
+            <thead>
+                <row><entry>Kommando</entry><entry>Anzahl Adressen</entry><entry>Beschreibung</entry></row>
+            </thead>
+            <tbody>
+                <row>
+                    <entry><literal>: <replaceable>label</replaceable></literal><indexterm><primary>Kommando</primary><secondary>:</secondary></indexterm></entry>
+                    <entry>0</entry>
+                    <entry>definiert das Sprungziel <replaceable>label</replaceable>. Siehe Kommandos <literal>b</literal> oder <literal>t</literal>, wie man Labels anspringt.</entry>
+                </row>
+                <row>
+                    <entry><literal>b <replaceable>label</replaceable></literal><indexterm><primary>Kommando</primary><secondary>b</secondary></indexterm></entry>
+                    <entry>0-2</entry>
+                    <entry>Branch; unbedingter Sprung.</entry>
+                </row>
+                <row>
+                    <entry><literal>t <replaceable>label</replaceable></literal><indexterm><primary>Kommando</primary><secondary>t</secondary></indexterm></entry>
+                    <entry>0-2</entry>
+                    <entry>Bedingter Sprung. Es wird zum <replaceable>label</replaceable> gesprungen, wenn auf den aktuellen &patspace; eine <literal>s///</literal>- oder <literal>y///</literal>-Substitution erfolgt wurde.</entry>
+                </row>
+            </tbody></tgroup></table>
+
+            <table xml:id="tbl-kommandos-hold-buffer" frame="topbot" pgwide="0"><info><title>Kommandos im Zusammenhang mit dem Hold-buffer</title></info>
+            <tgroup cols="3" align="left" colsep="0" rowsep="0">
+            <colspec colnum="1" colname="col1" colwidth="3*"/>
+            <colspec colnum="2" colname="col2" colwidth="2*"/>
+            <colspec colnum="3" colname="col3" colwidth="8*"/>
+            <thead>
+                <row><entry>Kommando</entry><entry>Anzahl Adressen</entry><entry>Beschreibung</entry></row>
+            </thead>
+            <tbody>
+                <row>
+                    <entry><literal>D</literal><indexterm><primary>Kommando</primary><secondary>D</secondary></indexterm></entry>
+                    <entry>0-2</entry>
+                    <entry>Löscht den Text im &patspace; bis zum ersten newline. Ist noch Text im &patspace; enthalten, starte einen Zyklus mit diesem Text, ansonsten starte einen normalen Zyklus.</entry>
+                </row>
+                <row>
+                    <entry><literal>N</literal><indexterm><primary>Kommando</primary><secondary>N</secondary></indexterm></entry>
+                    <entry>0-2</entry>
+                    <entry>Hängt eine newline an den &patspace; an, gefolgt von der nächsten Zeile des inputs. Ist das Ende der Datei erreicht, wird das Programm abgebrochen, ohne weitere Befehle abzuarbeiten.</entry>
+                </row>
+                <row>
+                    <entry><literal>P</literal><indexterm><primary>Kommando</primary><secondary>N</secondary></indexterm></entry>
+                    <entry>0-2</entry>
+                    <entry>Gibt den &patspace; bis zum ersten newline aus.</entry>
+                </row>
+                <row>
+                    <entry><literal>h</literal><indexterm><primary>Kommando</primary><secondary>h</secondary></indexterm></entry>
+                    <entry>0-2</entry>
+                    <entry>Ersetzt den Inhalt des &holdspace; mit dem des &patspace;.</entry>
+                </row>
+                <row>
+                    <entry><literal>H</literal><indexterm><primary>Kommando</primary><secondary>H</secondary></indexterm></entry>
+                    <entry>0-2</entry>
+                    <entry>Hängt ein newline an den &holdspace;, gefolgt vom Inhalt des &patspace; an.</entry>
+                </row>
+                <row>
+                    <entry><literal>g</literal><indexterm><primary>Kommando</primary><secondary>g</secondary></indexterm></entry>
+                    <entry>0-2</entry>
+                    <entry>Ersetzt den Inhalt des &patspace; mit dem des &holdspace;.</entry>
+                </row>
+                <row>
+                    <entry><literal>G</literal><indexterm><primary>Kommando</primary><secondary>G</secondary></indexterm></entry>
+                    <entry>0-2</entry>
+                    <entry>Hängt ein newline an den &patspace;, gefolgt vom Inhalt des &holdspace; an.</entry>
+                </row>
+                <row>
+                    <entry><literal>x</literal><indexterm><primary>Kommando</primary><secondary>x</secondary></indexterm></entry>
+                    <entry>0-2</entry>
+                    <entry>Tauscht den Inhalt von &patspace; und &holdspace; aus.</entry>
+                </row>
+            </tbody></tgroup></table>
+        </para>
+        <para>
+            <indexterm><primary>Kommando</primary><secondary>a</secondary></indexterm>
+            <indexterm><primary>Kommando</primary><secondary>i</secondary></indexterm>
+            <indexterm><primary>Kommando</primary><secondary>c</secondary></indexterm>
+            <indexterm><primary>Kommando</primary><secondary>l</secondary></indexterm>
+            <indexterm><primary>Kommando</primary><secondary>r</secondary></indexterm>
+            <indexterm><primary>Kommando</primary><secondary>w</secondary></indexterm>
+            Daneben gibt es noch weitere Befehle wie <literal>a</literal>, <literal>i</literal>, <literal>c</literal>, <literal>l</literal>,
+            <literal>r</literal>, <literal>w</literal>. Der Leser sei diesbezüglich  mit einem freundlichen RTFM auf die man-page verwiesen.
+        </para>
+    </section>
+</chapter>
+
+<chapter xml:id="sec-history"><info><title>Versionsgeschichte</title></info>
+    <revhistory>
+        <revision>
+            <revnumber>1.9</revnumber>
+            <date>2013-03-03</date>
+            <authorinitials>thp</authorinitials>
+            <revremark>Update auf Docbook 5, die Quelldatei ist nun UTF-8 kodiert.</revremark>
+        </revision>
+        <revision>
+            <revnumber>1.8</revnumber>
+            <date>2012-06-25</date>
+            <authorinitials>thp</authorinitials>
+            <revremark>Kleine Korrekturen. Updated Links, Link auf Feedback-Seite.</revremark>
+        </revision>
+        <revision>
+            <revnumber>1.7</revnumber>
+            <date>2010-06-12</date>
+            <authorinitials>thp</authorinitials>
+            <revremark>Eine kleine Anmerkum zum Shakespeare-Zitat (vielen Dank an Daniel). Ein paar Querverweise eingefügt.</revremark>
+        </revision>
+        <revision>
+            <revnumber>1.6</revnumber>
+            <date>2009-04-13</date>
+            <authorinitials>thp</authorinitials>
+            <revremark>Verwendung des Docbook Stils "book" anstelle von "article". Erweiterung des Indexes und bessere Beschreibung der Beispiele. Vielen Dank an "Max" (Rem Remedy).</revremark>
+        </revision>
+        <revision>
+            <revnumber>1.5</revnumber>
+            <date>2008-11-16</date>
+            <authorinitials>thp</authorinitials>
+            <revremark>Index eingefügt.</revremark>
+        </revision>
+        <revision>
+            <revnumber>1.4</revnumber>
+            <date>2008-08-11</date>
+            <authorinitials>thp</authorinitials>
+            <revremark>Einige Rechtschreibkorrekturen. Vielen Dank an Constantin Hagemeier. Umstellung von db2pdf auf fop.</revremark>
+        </revision>
+        <revision>
+            <revnumber>1.3</revnumber>
+            <date>2008-04-13</date>
+            <authorinitials>thp</authorinitials>
+            <revremark>Viele Rechtschreibkorrekturen. Vielen Dank an Kate (KDE Advanced Text Editor).</revremark>
+        </revision>
+        <revision>
+            <revnumber>1.2</revnumber>
+            <date>2008-03-03</date>
+            <authorinitials>thp</authorinitials>
+            <revremark>Neue Lizenz: Creative Commons Attribution-Share Alike 3.0 Unported.</revremark>
+        </revision>
+        <revision>
+            <revnumber>1.1</revnumber>
+            <date>2007-07-19</date>
+            <authorinitials>thp</authorinitials>
+            <revremark>Kleinere Verbesserungen und Rechtschreibkorrekturen. Vielen Dank an Alexander Kriegisch.</revremark>
+        </revision>
+        <revision>
+            <revnumber>1.0</revnumber>
+            <date>2007-02-20</date>
+            <authorinitials>thp</authorinitials>
+            <revremark>Kleinere Verbesserungen und Rechtschreibkorrekturen.</revremark>
+        </revision>
+        <revision>
+            <revnumber>0.9</revnumber>
+            <date>2005-05-03</date>
+            <authorinitials>thp</authorinitials>
+            <revremark>Verbesserungen von Mathias Michaelis zu den K-Kommentaren.</revremark>
+        </revision>
+        <revision>
+            <revnumber>0.8</revnumber>
+            <date>2004-03-17</date>
+            <authorinitials>thp</authorinitials>
+            <revremark>Umstieg auf xml.</revremark>
+        </revision>
+        <revision>
+            <revnumber>0.7</revnumber>
+            <date>2003-01-09</date>
+            <authorinitials>thp</authorinitials>
+            <revremark>Bessere Unterscheidung Basic/Erweiterte Reguläre Ausdrücke; erster Versuch, <acronym>GNU</acronym>-ismen aus den Scripten zu verbannen.</revremark>
+        </revision>
+        <revision>
+            <revnumber>0.6</revnumber>
+            <date>2002-11-10</date>
+            <authorinitials>thp</authorinitials>
+            <revremark>Beispiel für den x-Befehl in der Space-ball Sektion eingefügt. Danke an Ulf Bro.</revremark>
+        </revision>
+        <revision>
+            <revnumber>0.5</revnumber>
+            <date>2002-09-06</date>
+            <authorinitials>thp</authorinitials>
+            <revremark>History als Kapitel angelegt, wie es die FDL verlangt; Detailänderungen.</revremark>
+        </revision>
+        <revision>
+            <revnumber>0.4</revnumber>
+            <date>2002-03-02</date>
+            <authorinitials>thp</authorinitials>
+            <revremark>Detailverbesserungen und Kurzreferenz.</revremark>
+        </revision>
+        <revision>
+            <revnumber>0.3</revnumber>
+            <date>2001-09-11</date>
+            <authorinitials>thp</authorinitials>
+            <revremark>Gründlich überarbeitet und neu strukturiert.</revremark>
+        </revision>
+        <revision>
+            <revnumber>0.2</revnumber>
+            <date>2001-01-09</date>
+            <authorinitials>thp</authorinitials>
+            <revremark>wurde nie freigegeben.</revremark>
+        </revision>
+        <revision>
+            <revnumber>0.1</revnumber>
+            <date>2001-09-07</date>
+            <authorinitials>thp</authorinitials>
+            <revremark>Beginn der Arbeit am Tutorium.</revremark>
+        </revision>
+    </revhistory>
+</chapter>
+
+<index xml:id="sec-ix01"><info><title>Index</title></info>
+</index>
+
+</book>

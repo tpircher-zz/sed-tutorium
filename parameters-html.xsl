@@ -17,5 +17,11 @@
 <xsl:param name="html.stylesheet"       select="'style.css'"/>
 <xsl:param name="html.cleanup"          select="1"/>
 <xsl:param name="make.valid.html"       select="1"/>
+<!--
+<xsl:param name="table.cell.border.style" select="solid"/>
+<xsl:param name="table.frame.border.style" select="solid"/>
+<xsl:param name="html.cellspacing"      select="0"/>
+<xsl:param name="html.cellpadding"      select="2"/>
+-->
 
 </xsl:stylesheet>

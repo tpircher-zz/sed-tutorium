@@ -22,14 +22,14 @@ gehostet.
 Generierung der HTML-Dateien
 ----------------------------
 
-Folgende Dateien beinhalten hart-kodierte Pfade zu den DocBook Stylesheets:
+Folgende Dateien beinhalten Pfade zu den DocBook Stylesheets, welche eventuell angepasst werden müssen:
 - parameters-chunked-html.xsl
 - parameters-html.xsl
 - parameters-epub.xsl
 - parameters-fo.xsl
-z.B.: <xsl:import href="file:///usr/share/sgml/docbook/stylesheet/xsl/nwalsh/xhtml/docbook.xsl"/>
 
-Anschliessend ein 'make all' eingegeben und die HTML Dateien wedem im Verzeichnis 'out' generiert.
+Der Befehl 'make all' generiert die HTML Dateien und das epub File inm Verzeichnis 'out'.
+Um ein PDF zu erzeugen, muss man 'make pdf' eingeben.
 
 
 Feedback

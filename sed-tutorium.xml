@@ -45,14 +45,13 @@
 
     <keywordset>
         <keyword>sed</keyword>
-        <keyword>german</keyword>
+        <keyword>German</keyword>
         <keyword>deutsch</keyword>
-        <keyword>einfuehrung</keyword>
-        <keyword>einführung</keyword>
-        <keyword>tutorium</keyword>
-        <keyword>tutorial</keyword>
-        <keyword>tools</keyword>
-        <keyword>shell utilities</keyword>
+        <keyword>Einführung</keyword>
+        <keyword>Tutorium</keyword>
+        <keyword>Tutorial</keyword>
+        <keyword>Tools</keyword>
+        <keyword>Shell Utilities</keyword>
     </keywordset>
 </info>
 
@@ -70,7 +69,7 @@
     </para>
     <section xml:id="sec-intro-ueber"><info><title>Über dieses Tutorium</title></info>
         <para>
-            Ich bin kein &sed;-Guru, deshalb könnte manches Problem sicher mit weniger Kommandos gelöst werden.
+            Ich bin kein &sed;-Guru, deshalb könnte manches Problem sicher mit weniger Befehlen gelöst werden.
             Das ist aber nicht der Sinn dieser Einführung die versucht die Beispiele so nachvollziehbar wie nur möglich zu halten.
             Ich bin aber dankbar für jedes Feedback, für Anregungen, Kritik, Fehlermeldungen, Verbesserungsvorschläge
             und Blankoschecks.
@@ -161,13 +160,13 @@
             <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://sed.sourceforge.net/sedfaq.html">sedfaq</link> von Eric Pement.
             Das Tutorial von Carlos Jorge Duarte (<link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://sed.sourceforge.net/grabbag/tutorials/do_it_with_sed.txt">do it with sed</link>)
             ist sehr lesenswert, besonders wegen der vielen sehr gut dokumentierten und zum Teil trickreichen Scripte.
-            Wer keine Dokumentation zu &sed; hat, findet in dem File eine kurze aber durchaus brauchbare Referenz.
+            Wer keine Dokumentation zu &sed; hat, findet in der Datei eine kurze aber durchaus brauchbare Referenz.
             Sehr gut ist auch <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="ftp://ftp.cs.umu.se/pub/pc/u-sedit2.zip">u-sedit</link> von Mike Arst,
             welches ein Tutorial und jede Menge Beispiele beinhaltet.
         </para>
         <para>
             Spezifische Fragen (sofern nicht in den FAQs behandelt) kann man auch in den
-            <emphasis>dafür zuständigen</emphasis> Newsgroups stellen.
+            <emphasis>dafür zuständigen</emphasis> Newsgruppen stellen.
             Man bekommt dort meistens eine fundierte und ausführliche Antwort - eine treffende Beschreibung des Problems
             und die Befolgung der jeweiligen Netiquette seitens des Fragenden vorausgesetzt.
             Eine zuständige deutschsprachige Newsgruppe könnte beispielsweise
@@ -355,7 +354,7 @@
                     </para>
                 </listitem>
                 <listitem>
-                    <para>Die geschwungenen Klammern sind normale Zeichen, und müssen mit Backslashes "escaped" werden,
+                    <para>Die geschwungenen Klammern sind normale Zeichen, und müssen mit Backslashs "escaped" werden,
                     werden also als '<literal>\{</literal>' und '<literal>\}</literal>' geschrieben.
                     Das selbe gilt für runde Klammern; die Zeichen, die durch '<literal>\(</literal>' und '<literal>\)</literal>'
                     eingeschlossen werden, können später mit '<literal>\1</literal>' usw. dereferenziert werden.
@@ -519,7 +518,7 @@ cat /etc/passwd | sed -n -e '/root/p'
     <section xml:id="sec-erste-schritte-kommandos"><info><title>Kommandos</title></info>
         <para>
             Das Programm <programlisting>sed -e 'd' /etc/services</programlisting>
-            liefert erstmal gar nix.
+            liefert erst mal gar nix.
             <indexterm><primary>Kommando</primary><secondary>d</secondary></indexterm>
         </para>
         <para>
@@ -575,7 +574,7 @@ cat /etc/passwd | sed -n -e '/root/p'
             Alle anderen Zeilen werden in den &patspace; geladen, der nicht bearbeitet wird da die
             Adresse nicht auf die Zeile zutrifft und anschließend wird der &patspace; nach
             &stdout; geschrieben.
-            Das Ergebnis des Scripts ist eine Kopie der Eingabedatei, in der die erste Zeile fehlt.
+            Das Ergebnis des Scriptes ist eine Kopie der Eingabedatei, in der die erste Zeile fehlt.
         </para>
         <para>
             Man kann auch Adressbereiche angeben wie in <programlisting>sed -e '1,10d' /etc/services</programlisting>
@@ -673,7 +672,7 @@ sed -e '10q'
             Weiters wird auch das Kommentarzeichen '<literal>#</literal>' als Kommando bezeichnet.
             <indexterm><primary>Kommando</primary><secondary>#</secondary></indexterm>
             &sed; ignoriert alle nachfolgenden Zeichen im <emphasis>Script</emphasis> bis zum Ende der Zeile.
-            Das ist nützlich in Scripten, die in Files geschrieben wurden und die an trickreichen Stellen ein
+            Das ist nützlich in Scripten, die in Dateien geschrieben wurden und die an trickreichen Stellen ein
             paar erklärende Worte verlangen.
         </para>
         <para>
@@ -771,7 +770,7 @@ sed -e '10q'
             So ist z.B. '<literal>1,9=</literal>' ein ungültiges Kommando, aber '<literal>1,9{=;}</literal>'
             ist ist nicht zu beanstanden.
             Der Effekt dieses Programms ist dass die Zeilen von 1 bis 9 mit vorangestellten Zeilennummern ausgegeben werden,
-            der Rest des Files wird unverändert wiedergegeben.
+            der Rest der Datei wird unverändert wiedergegeben.
         </para>
         <tip>
             Weil es oft gebraucht wird, stelle ich noch Scripte zur Umwandlung von Dateien im <acronym>DOS</acronym>-Format
@@ -813,7 +812,7 @@ C:\> sed -n p file                        # method 2
         <emphasis>Slash</emphasis>es '/' scheinen zu fehlen. Das hat den Grund, dass es manchmal nötig ist in einer RE den
         <emphasis>Slash</emphasis> selber anzugeben.
         Damit dieser aber nicht fälschlicherweise interpretiert wird, muss er mit dem <emphasis>Backslash</emphasis>
-        gequotet werden, also '<literal>\/</literal>'. &sed; gibt einem die Möglichkeit, ein anderes
+        escaped werden, also '<literal>\/</literal>'. &sed; gibt einem die Möglichkeit, ein anderes
         Zeichen als den <emphasis>Slash</emphasis> als RE-Begrenzer zu verwenden. Man kann also '<literal>/\/bin\/ls/</literal>'
         oder beispielsweise '<literal>\@/bin/ls@</literal>' verwenden.
         In gleicher Weise kann das mit dem <literal>s</literal>- oder <literal>y</literal>-Kommando geschehen:
@@ -880,7 +879,7 @@ C:\> sed -n p file                        # method 2
             <indexterm><primary>Kommando</primary><secondary>\<replaceable>n</replaceable></secondary></indexterm>
             Diese Teile werden mit '<literal>\(</literal>' und '<literal>\)</literal>' markiert, und man kann auf diese Strings mit
             '<literal>\1</literal>', '<literal>\2</literal>' usw. zugreifen.
-            Nehmen wir einmal an wir hätten ein File, in dem verschiedene Namen eingetragen sind:
+            Nehmen wir einmal an wir hätten eine Datei, in dem verschiedene Namen eingetragen sind:
 <screen>John Fitzgerald Kennedy
 Franz Josef Strauss
 Ernst Theodor Amadeus Hoffmann
@@ -1236,7 +1235,7 @@ Meinst du?
 </screen>
             usw. Ich könnte mich stundenlang mit Amalie unterhalten. Für komplexere Charaktere wäre es denkbar,
             den Input nach bestimmten Mustern zu durchsuchen und dementsprechend zu reagieren.
-            Dabei muss ja nicht jede Antwort in einem File gespeichert sein, man könnte ja den
+            Dabei muss ja nicht jede Antwort in einer Datei gespeichert sein, man könnte ja den
             &patspace; mit '<literal>s/^.*$/Antwort/p</literal>' füllen.
         </para>
     </section>
@@ -1302,7 +1301,7 @@ Meinst du?
         <indexterm><primary>vi</primary></indexterm>
         <indexterm><primary>vim</primary></indexterm>
         <para>
-            Das meistverwendetste Programm, in dem man &sed;-Anweisungen angeben kann, ist sicher <command>vi</command>.
+            Das am meisten verbreitete Programm, in dem man &sed;-Anweisungen angeben kann, ist sicher <command>vi</command>.
             Um beispielsweise in einer Zeile "bla" nach "blupp" zu ändern, schreibt man
             <programlisting>:s/bla/blubb/g</programlisting>
             Ein interessantes Flag zum <literal>s///</literal>-Kommando ist <literal>c</literal>, welches bewirkt, dass man bei
@@ -1422,7 +1421,7 @@ t test
         </para>
         <para>
             Man kann sich nun in Anlehnung an ein prozedurales Vorgehen vorstellen, man suche das erste Auftreten von
-            '<literal>ok</literal>' innerhalb einer Zeichenkette. Dazu lese man immerwieder neue Zeichen von der
+            '<literal>ok</literal>' innerhalb einer Zeichenkette. Dazu lese man immer wieder neue Zeichen von der
             Zeichenkette ein und untersuche die eingelesenen Zeichen.
         </para>
         <para>
@@ -1621,7 +1620,7 @@ t test
                 <row>
                     <entry><literal>=</literal><indexterm><primary>Kommando</primary><secondary>=</secondary></indexterm></entry>
                     <entry>0-1</entry>
-                    <entry>Gibt die aktuelle Position im Input-stream aus.</entry>
+                    <entry>Gibt die aktuelle Position im Input-Stream aus.</entry>
                 </row>
                 <row>
                     <entry><literal>q</literal><indexterm><primary>Kommando</primary><secondary>q</secondary></indexterm></entry>
@@ -1631,7 +1630,7 @@ t test
                 <row>
                     <entry><literal>l</literal><indexterm><primary>Kommando</primary><secondary>l</secondary></indexterm></entry>
                     <entry>0-2</entry>
-                    <entry>Gibt den &patspace; in einer unmissverständlichen Form aus, die die <acronym>ANSI C\</acronym>-Screibweise angelehnt is. Sehr nützlich zur Fehlersuche.</entry>
+                    <entry>Gibt den &patspace; in einer unmissverständlichen Form aus, die an die <acronym>ANSI C</acronym>-Screibweise angelehnt is. Sehr nützlich zur Fehlersuche.</entry>
                 </row>
                 <row>
                     <entry><literal>d</literal><indexterm><primary>Kommando</primary><secondary>d</secondary></indexterm></entry>

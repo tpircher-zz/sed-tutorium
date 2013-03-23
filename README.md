@@ -4,8 +4,7 @@ Eine kleine Einführung in sed
 A small introduction in sed (in German language).
 
 This document is released under the
-[Creative Commons Attribution-Share Alike 3.0 Unported License]
-(http://creativecommons.org/licenses/by-sa/3.0/).
+[Creative Commons Attribution-Share Alike 3.0 Unported License](http://creativecommons.org/licenses/by-sa/3.0/).
 
 
 Neue Versionen
@@ -23,14 +22,14 @@ gehostet.
 Generierung der HTML-Dateien
 ----------------------------
 
-Es muessen in den Dateien
+Folgende Dateien beinhalten hart-kodierte Pfade zu den DocBook Stylesheets:
 - parameters-chunked-html.xsl
 - parameters-html.xsl
-die Pfade zu den Docbook Stylesheets angegeben werden.
-z.B.: <xsl:import href="/usr/share/sgml/docbook/stylesheet/xsl/nwalsh/xhtml/docbook.xsl"/>
+- parameters-epub.xsl
+- parameters-fo.xsl
+z.B.: <xsl:import href="file:///usr/share/sgml/docbook/stylesheet/xsl/nwalsh/xhtml/docbook.xsl"/>
 
-Anschliessend ein 'make all' eingegeben und die HTML Dateien wedem im Verzeichnis 'out'
-generiert.
+Anschliessend ein 'make all' eingegeben und die HTML Dateien wedem im Verzeichnis 'out' generiert.
 
 
 Feedback

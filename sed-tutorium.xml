@@ -2,7 +2,7 @@
 
 <!DOCTYPE book [
         <!ENTITY docversion "1.10">
-        <!ENTITY docdate    "März 2013">
+        <!ENTITY docdate    "Januar 2014">
 
         <!ENTITY sed        "<command>sed</command>">
         <!ENTITY gnused     "<acronym>GNU</acronym>&nbsp;<command>sed</command>">
@@ -92,6 +92,19 @@
         </para>
     </section>
     <section xml:id="sec-intro-was"><info><title>Was ist sed</title></info>
+        <para>
+            &sed; ist ein kleines aber feines UNIX Programm, um Texte zu verarbeiten.
+            Es ist im Gegensatz zu gewöhnlichen Editoren nicht interaktiv; sed arbeitet eine Eingabedatei anhand vorher
+            festgelegter Regeln ab und gibt das Ergebnis auf die Standard-Ausgabe aus.
+            Das macht sed sehr nützlich um eine große Anzahl von Dateien Script-gesteuert als Batch zu verarbeiten.
+        </para>
+        <indexterm><primary>Regular Expression</primary></indexterm>
+        <para>
+            Ganz nebenbei lernt man durch die Beschäftigung mit &sed; eine ganze Menge über Reguläre Ausdrücke
+            (Regular Expressions),
+            die grundlegenden Prinzipien von <acronym>UNIX</acronym>
+            und einige kleine Tricks, welche in anderen Programmen wie <command>vim</command> sehr nützlich sind.
+        </para>
         <indexterm><primary>Geschichte von &sed;</primary></indexterm>
         <indexterm><primary>&sed;</primary><secondary>Geschichte von</secondary></indexterm>
         <para>

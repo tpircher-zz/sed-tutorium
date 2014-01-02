@@ -4,7 +4,7 @@ xslchnk = parameters-chunked-html.xsl
 xslepub = parameters-epub.xsl
 xslfo   = parameters-fo.xsl
 outdir  = out
-src	= sed-tutorium.xml
+src     = sed-tutorium.xml
 
 all: html chnk epub
 

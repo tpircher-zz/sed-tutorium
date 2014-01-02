@@ -28,7 +28,7 @@ Folgende Dateien beinhalten Pfade zu den DocBook Stylesheets, welche eventuell a
 - parameters-epub.xsl
 - parameters-fo.xsl
 
-Der Befehl 'make all' generiert die HTML Dateien und das epub File inm Verzeichnis 'out'.
+Der Befehl 'make all' generiert die HTML Dateien und das epub File im Verzeichnis 'out'.
 Um ein PDF zu erzeugen, muss man 'make pdf' eingeben.
 
 

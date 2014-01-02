@@ -1,27 +1,27 @@
-<?xml version='1.0' encoding="UTF-8" ?>
+<?xml version='1.0' encoding="utf-8" ?>
 
 <!DOCTYPE book [
-        <!ENTITY docversion "1.10">
+        <!ENTITY docversion "1.11">
         <!ENTITY docdate    "Januar 2014">
 
         <!ENTITY sed        "<command>sed</command>">
-        <!ENTITY gnused     "<acronym>GNU</acronym>&nbsp;<command>sed</command>">
+        <!ENTITY gnused     "<acronym>GNU</acronym> <command>sed</command>">
         <!ENTITY stdin      "<filename class='devicefile'>stdin</filename>">
         <!ENTITY stdout     "<filename class='devicefile'>stdout</filename>">
         <!ENTITY stderr     "<filename class='devicefile'>stderr</filename>">
         <!ENTITY patspace   "<emphasis>pattern space</emphasis>">
         <!ENTITY holdspace  "<emphasis>hold space</emphasis>">
-
-        <!ENTITY nbsp       "&#160;">
 ]>
 
-<book xml:id="sed-tutorium" xmlns="http://docbook.org/ns/docbook" version="5.0" xml:lang="de">
+<book xmlns:db="http://docbook.org/ns/docbook" db:version="5.1"
+        xmlns:xl="http://www.w3.org/1999/xlink"
+        xml:id="sed-tutorium" xml:lang="de">
 <info>
     <title>&sed; Tutorium</title>
     <subtitle>Eine Einführung in &sed;</subtitle>
     <pubdate>&docdate;, v&docversion;</pubdate>
     <copyright>
-        <year>2001-2013</year>
+        <year>2001-2014</year>
         <holder>Thomas Pircher</holder>
     </copyright>
 
@@ -31,7 +31,7 @@
             <surname>Pircher</surname>
         </personname>
         <affiliation>
-            <orgname><link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://www.tty1.net/sed-tutorium_de.html">http://www.tty1.net/sed-tutorium_de.html</link></orgname>
+            <orgname><link xl:href="http://www.tty1.net/sed-tutorium_de.html">http://www.tty1.net/sed-tutorium_de.html</link></orgname>
             <address><email>tehpeh@gmx.net</email></address>
         </affiliation>
     </author>
@@ -39,7 +39,7 @@
     <legalnotice>
         <para>
             Dieses Dokument steht unter der
-            <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://creativecommons.org/licenses/by-sa/3.0/">Creative Commons Attribution-Share Alike 3.0 Unported Lizenz</link>.
+            <link xl:href="http://creativecommons.org/licenses/by-sa/3.0/">Creative Commons Attribution-Share Alike 3.0 Unported Lizenz</link>.
         </para>
     </legalnotice>
 
@@ -74,7 +74,7 @@
             Ich bin aber dankbar für jedes Feedback, für Anregungen, Kritik, Fehlermeldungen, Verbesserungsvorschläge
             und Blankoschecks.
             Sollte diese Einführung gefallen, dann sind auf der Seite
-            <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://www.tty1.net/say-thanks_de.html">http://www.tty1.net/say-thanks_de.html</link>
+            <link xl:href="http://www.tty1.net/say-thanks_de.html">http://www.tty1.net/say-thanks_de.html</link>
             ein paar Ideen aufgelistet, um sich erkenntlich zu zeigen.
         </para>
         <para>
@@ -86,9 +86,9 @@
         </para>
         <para>
             Neue Versionen dieses Dokumentes können von
-            <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://www.tty1.net/sed-tutorium_de.html">http://www.tty1.net/sed-tutorium_de.html</link> bezogen werden.
+            <link xl:href="http://www.tty1.net/sed-tutorium_de.html">http://www.tty1.net/sed-tutorium_de.html</link> bezogen werden.
             Der Quellcode ist nun auch auf
-            <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="https://github.com/tpircher/sed-tutorium">GitHub</link> gehostet.
+            <link xl:href="https://github.com/tpircher/sed-tutorium">GitHub</link> gehostet.
         </para>
     </section>
     <section xml:id="sec-intro-was"><info><title>Was ist sed</title></info>
@@ -111,7 +111,7 @@
             &sed; wurde 1973 oder 1974 von
             Lee E. McMahon<indexterm><primary>McMahon, Lee E.</primary></indexterm> geschrieben
             (mehr zur Geschichte der frühen <acronym>UNIX</acronym>-Kommandos
-            auf <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://www.columbia.edu/~rh120/ch106.x09">http://www.columbia.edu/~rh120/ch106.x09</link>).
+            auf <link xl:href="http://www.columbia.edu/~rh120/ch106.x09">http://www.columbia.edu/~rh120/ch106.x09</link>).
             Trotz seines Alters wird &sed; immer noch verwendet, da es ein weites Spektrum von
             einfachen bis sehr komplexen Aufgaben erledigen kann.
             Die Stärke von <acronym>UNIX</acronym> liegt zum Teil auch darin, dass es über kleine
@@ -154,12 +154,12 @@
             Dieses Tutorium versucht, sich so weit als möglich an die standardisierte Version von &sed; zu halten.
             Dem Autor liegt &gnused; vor, und alle Beispiele wurden damit getestet.
             Im Text wird aber jeweils darauf hingewiesen, wenn Erweiterungen verwendet werden.
-            Auf Pements <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://sed.sourceforge.net/sedfaq.html">sedfaq</link> findet sich eine erschöpfende
+            Auf Pements <link xl:href="http://sed.sourceforge.net/sedfaq.html">sedfaq</link> findet sich eine erschöpfende
             Liste der verschiedenen &sed;-Implementationen und deren Unterschiede.
         </para>
         <para>
             Eine gute Hersteller-unabhängige Dokumentation stellt die
-            <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://www.opengroup.org/onlinepubs/007908799/xcu/sed.html">Open Group</link> bereit.
+            <link xl:href="http://www.opengroup.org/onlinepubs/007908799/xcu/sed.html">Open Group</link> bereit.
         </para>
     </section>
     <section xml:id="sec-intro-doc"><info><title>Dokumentationen</title></info>
@@ -170,13 +170,13 @@
         </para>
         <para>
             Eine Sammlung interessanter Fragen rund um &sed;, inklusive vieler Scripte sowie eine nicht enden wollende
-            Liste von weiterführenden Links findet man auf <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://sed.sourceforge.net/">&sed; $HOME</link>.
+            Liste von weiterführenden Links findet man auf <link xl:href="http://sed.sourceforge.net/">&sed; $HOME</link>.
             Besonders hinweisen möchte ich auf die dort enthaltene
-            <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://sed.sourceforge.net/sedfaq.html">sedfaq</link> von Eric Pement.
-            Das Tutorial von Carlos Jorge Duarte (<link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://sed.sourceforge.net/grabbag/tutorials/do_it_with_sed.txt">do it with sed</link>)
+            <link xl:href="http://sed.sourceforge.net/sedfaq.html">sedfaq</link> von Eric Pement.
+            Das Tutorial von Carlos Jorge Duarte (<link xl:href="http://sed.sourceforge.net/grabbag/tutorials/do_it_with_sed.txt">do it with sed</link>)
             ist sehr lesenswert, besonders wegen der vielen sehr gut dokumentierten und zum Teil trickreichen Scripte.
             Wer keine Dokumentation zu &sed; hat, findet in der Datei eine kurze aber durchaus brauchbare Referenz.
-            Sehr gut ist auch <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="ftp://ftp.cs.umu.se/pub/pc/u-sedit2.zip">u-sedit</link> von Mike Arst,
+            Sehr gut ist auch <link xl:href="ftp://ftp.cs.umu.se/pub/pc/u-sedit2.zip">u-sedit</link> von Mike Arst,
             welches ein Tutorial und jede Menge Beispiele beinhaltet.
         </para>
         <para>
@@ -185,7 +185,7 @@
             Man bekommt dort meistens eine fundierte und ausführliche Antwort - eine treffende Beschreibung des Problems
             und die Befolgung der jeweiligen Netiquette seitens des Fragenden vorausgesetzt.
             Eine zuständige deutschsprachige Newsgruppe könnte beispielsweise
-            <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="news:de.comp.os.unix.shell">news:de.comp.os.unix.shell</link> sein.
+            <link xl:href="news:de.comp.os.unix.shell">news:de.comp.os.unix.shell</link> sein.
         </para>
     </section>
 </chapter>
@@ -350,7 +350,7 @@
         Für detailliertere Informationen siehe die man-page <emphasis>regex(7)</emphasis> oder,
         falls nicht vorhanden die man-page zu <emphasis>awk(1)</emphasis>, welche lange Zeit auch als die Referenz für REs galt,
         oder <emphasis>flex(1)</emphasis> oder die
-        <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://www.opengroup.org/onlinepubs/007908799/xbd/re.html">Online-Dokumentation der Open Group</link>.
+        <link xl:href="http://www.opengroup.org/onlinepubs/007908799/xbd/re.html">Online-Dokumentation der Open Group</link>.
         <indexterm><primary>awk</primary></indexterm>
         <indexterm><primary>flex</primary></indexterm>
         <indexterm><primary>Open Group</primary></indexterm>
@@ -798,7 +798,7 @@ sed -e '10q'
         <tip>
             Weil es oft gebraucht wird, stelle ich noch Scripte zur Umwandlung von Dateien im <acronym>DOS</acronym>-Format
             (CR/LF) ins <acronym>UNIX</acronym>-Format (LF) und umgekehrt vor.
-            Sie wurden der schon erwähnten <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://sed.sourceforge.net/sedfaq.html">sedfaq</link> von Eric Pement entnommen.
+            Sie wurden der schon erwähnten <link xl:href="http://sed.sourceforge.net/sedfaq.html">sedfaq</link> von Eric Pement entnommen.
             <indexterm><primary>dos2unix</primary></indexterm>
             <indexterm><primary>unix2dos</primary></indexterm>
 <programlisting># 3. Under UNIX: convert DOS newlines (CR/LF) to Unix format
@@ -905,28 +905,31 @@ C:\> sed -n p file                        # method 2
             '<literal>\1</literal>', '<literal>\2</literal>' usw. zugreifen.
             Nehmen wir einmal an wir hätten eine Datei, in dem verschiedene Namen eingetragen sind:
 <screen>Alan Mathison Turing
-John von Neumann
 Claude Elwood Shannon
+Grace Murray Hopper
+John von Neumann
 Ada Lovelace
 </screen>
             die in die Form <literal>&lt;VORNAME&gt; [&lt;INITIAL ZWEITER NAME&gt;.] &lt;NACHNAME&gt;</literal> gebracht werden soll.
             Dazu muss man erst die Bereiche definieren:
-            <programlisting>sed -e 's/^[^ ][^ ]* [[:alpha:]]..* [^ ][^ ]*$//'</programlisting>
+            <programlisting>sed -e 's/^[^ ][^ ]* [[:alpha:]].* [^ ][^ ]*$//'</programlisting>
             Nun gibt man um die gewünschten Zonen die Klammern und stellt sich das Ergebnis mit '\1' und '\2' und '\3' zusammen:
-            <programlisting>sed -e 's/\(^[^ ][^ ]*\) \([[:alpha:]]\)..* \([^ ][^ ]*\)$/\1 \2. \3/'</programlisting>
+            <programlisting>sed -e 's/\(^[^ ][^ ]*\) \([[:alpha:]]\).* \([^ ][^ ]*\)$/\1 \2. \3/'</programlisting>
             und voilà das Ergebnis:
 <screen>Alan M. Turing
-John v. Neumann
 Claude E. Shannon
+Grace M. Hopper
+John v. Neumann
 Ada Lovelace
 </screen>
             Will man das Ergebnis noch in eine Adressdatenbank importieren, dann muss man einen Feldbezeichner vor die Namen setzen.
             Ein erster Versuch wäre der, das gleich in einem Rutsch mit dem Script
-            <programlisting>sed -e 's/\(^[^ ][^ ]*\) \([[:alpha:]]\)..* \([^ ][^ ]*\)$/name: \1 \2. \3/'</programlisting>
+            <programlisting>sed -e 's/\(^[^ ][^ ]*\) \([[:alpha:]]\).* \([^ ][^ ]*\)$/name: \1 \2. \3/'</programlisting>
             zu bewerkstelligen, das liefert aber genau da ein falsches Ergebnis, wenn der zweite Vorname fehlt.
 <screen>name: Alan M. Turing
-name: John v. Neumann
 name: Claude E. Shannon
+name: Grace M. Hopper
+name: John v. Neumann
 Ada Lovelace
 </screen>
             Einem solchen nur teilweise formatierten Datenhaufen ist nur schwer beizukommen.
@@ -1004,19 +1007,19 @@ s/..*/name: &amp;/
             In solchen Fällen ist das Kommando '<literal>l</literal>' nützlich.
             Es gibt den &patspace; in einer eindeutigen Schreibweise (welche an <acronym>ANSI C</acronym> angelehnt ist)
             auf den Bildschirm:
-<programlisting>echo "adressier	mich dоch! " | sed -n 'l'
-adressier\tmich d\320\276ch! $
+<programlisting>echo "versuch	mich zu haschen! " | sed -ne 'l'
+versuch\tmich zu haschen\307\203 $
 </programlisting>
-            Jetzt wird klar warum die Adresse '<literal>/^addressier mich doch!$/</literal>' nicht zur Eingabe passt:
+            Jetzt wird klar warum die Adresse '<literal>/^versuch mich zu haschen!$/</literal>' nicht zur Eingabe passt:
             erstens ist das Zeichen zwischen den ersten beiden Wörtern kein Leerzeichen sondern ein Tabluator,
-            zweitens ist das '<literal>о</literal>' im dritten Wort in kyrillisch kodiert, und drittens hat sich ein
-            Leerzeichen am Ende der Zeile eingeschlichen.
+            zweitens ist das vermeintlich Rufezeichen in Wahrheit das Unicode Zeichen "latin letter retroflex click",
+            und schließlich hat sich ein Leerzeichen am Ende der Zeile eingeschlichen.
         </para>
         <note>
             Das obige Beispiel ist möglicherweise nicht durch Copy&amp;Paste nachzuvollziehen, da Sonderzeichen
             nicht immer korrekt kopiert werden. Wenn auf einem System das Programm <command>base64</command>
             vorhanden ist, dann kann man das Beispiel mit der folgenden Eingabe nachvollziehen:
-<programlisting>echo YWRyZXNzaWVyCW1pY2ggZNC+Y2ghIAo= | base64 -d | sed -e 'l'</programlisting>
+<programlisting>echo dmVyc3VjaAltaWNoIHp1IGhhc2NoZW7HgyAK | base64 -d | sed -ne 'l'</programlisting>
         </note>
     </section>
 </chapter>
@@ -1538,7 +1541,7 @@ t test
         </para>
         <para>
             Diesen Trick verdanke ich Carlos Duarte - ein weiterer Anreiz, in sein
-            <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://sed.sourceforge.net/grabbag/tutorials/do_it_with_sed.txt">sed tutorial</link> hineinzuschauen.
+            <link xl:href="http://sed.sourceforge.net/grabbag/tutorials/do_it_with_sed.txt">sed tutorial</link> hineinzuschauen.
         </para>
     </section>
 
@@ -1775,6 +1778,12 @@ t test
 
 <chapter xml:id="sec-history"><info><title>Versionsgeschichte</title></info>
     <revhistory>
+        <revision>
+            <revnumber>1.11</revnumber>
+            <date>2014-01-02</date>
+            <authorinitials>thp</authorinitials>
+            <revremark>Bessere Beschreibung in "was ist sed".</revremark>
+        </revision>
         <revision>
             <revnumber>1.10</revnumber>
             <date>2013-03-21</date>

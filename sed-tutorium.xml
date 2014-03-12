@@ -1,8 +1,8 @@
-<?xml version='1.0' encoding="utf-8" ?>
+<?xml version='1.0' encoding="utf-8"?>
 
 <!DOCTYPE book [
-        <!ENTITY docversion "1.11">
-        <!ENTITY docdate    "Januar 2014">
+        <!ENTITY docversion "1.12">
+        <!ENTITY docdate    "März 2014">
 
         <!ENTITY sed        "<command>sed</command>">
         <!ENTITY gnused     "<acronym>GNU</acronym> <command>sed</command>">
@@ -176,7 +176,7 @@
             Das Tutorial von Carlos Jorge Duarte (<link xl:href="http://sed.sourceforge.net/grabbag/tutorials/do_it_with_sed.txt">do it with sed</link>)
             ist sehr lesenswert, besonders wegen der vielen sehr gut dokumentierten und zum Teil trickreichen Scripte.
             Wer keine Dokumentation zu &sed; hat, findet in der Datei eine kurze aber durchaus brauchbare Referenz.
-            Sehr gut ist auch <link xl:href="ftp://ftp.cs.umu.se/pub/pc/u-sedit2.zip">u-sedit</link> von Mike Arst,
+            Sehr gut ist auch <link xl:href="http://www.tty1.net/stuff/u-sedit2.zip">u-sedit</link> von Mike Arst,
             welches ein Tutorial und jede Menge Beispiele beinhaltet.
         </para>
         <para>
@@ -1778,6 +1778,12 @@ t test
 
 <chapter xml:id="sec-history"><info><title>Versionsgeschichte</title></info>
     <revhistory>
+        <revision>
+            <revnumber>1.12</revnumber>
+            <date>2014-03-12</date>
+            <authorinitials>thp</authorinitials>
+            <revremark>Neuer Link zu Mike Arsts "u-sedit".</revremark>
+        </revision>
         <revision>
             <revnumber>1.11</revnumber>
             <date>2014-01-02</date>

@@ -31,7 +31,7 @@
             <surname>Pircher</surname>
         </personname>
         <affiliation>
-            <orgname><link xl:href="http://www.tty1.net/sed-tutorium_de.html">http://www.tty1.net/sed-tutorium_de.html</link></orgname>
+            <orgname><link xl:href="https://www.tty1.net/sed-tutorium_de.html">https://www.tty1.net/sed-tutorium_de.html</link></orgname>
             <address><email>tehpeh-sed@tty1.net</email></address>
         </affiliation>
     </author>
@@ -39,7 +39,7 @@
     <legalnotice>
         <para>
             Dieses Dokument steht unter der
-            <link xl:href="http://creativecommons.org/licenses/by-sa/3.0/">Creative Commons Attribution-Share Alike 3.0 Unported Lizenz</link>.
+            <link xl:href="https://creativecommons.org/licenses/by-sa/3.0/">Creative Commons Attribution-Share Alike 3.0 Unported Lizenz</link>.
         </para>
     </legalnotice>
 
@@ -74,7 +74,7 @@
             Ich bin aber dankbar für jedes Feedback, für Anregungen, Kritik, Fehlermeldungen, Verbesserungsvorschläge
             und Blankoschecks.
             Sollte diese Einführung gefallen, dann sind auf der Seite
-            <link xl:href="http://www.tty1.net/say-thanks_de.html">http://www.tty1.net/say-thanks_de.html</link>
+            <link xl:href="https://www.tty1.net/say-thanks_de.html">https://www.tty1.net/say-thanks_de.html</link>
             ein paar Ideen aufgelistet, um sich erkenntlich zu zeigen.
         </para>
         <para>
@@ -86,7 +86,7 @@
         </para>
         <para>
             Neue Versionen dieses Dokumentes können von
-            <link xl:href="http://www.tty1.net/sed-tutorium_de.html">http://www.tty1.net/sed-tutorium_de.html</link> bezogen werden.
+            <link xl:href="https://www.tty1.net/sed-tutorium_de.html">https://www.tty1.net/sed-tutorium_de.html</link> bezogen werden.
             Der Quellcode ist nun auch auf
             <link xl:href="https://github.com/tpircher/sed-tutorium">GitHub</link> gehostet.
         </para>
@@ -111,7 +111,7 @@
             &sed; wurde 1973 oder 1974 von
             Lee E. McMahon<indexterm><primary>McMahon, Lee E.</primary></indexterm> geschrieben
             (mehr zur Geschichte der frühen <acronym>UNIX</acronym>-Kommandos
-            auf <link xl:href="http://www.columbia.edu/~rh120/ch106.x09">http://www.columbia.edu/~rh120/ch106.x09</link>).
+            im <link xl:href="http://www.columbia.edu/~hauben/book/ch106.x09">Netizens Netbook</link>).
             Trotz seines Alters wird &sed; immer noch verwendet, da es ein weites Spektrum von
             einfachen bis sehr komplexen Aufgaben erledigen kann.
             Die Stärke von <acronym>UNIX</acronym> liegt zum Teil auch darin, dass es über kleine
@@ -159,7 +159,7 @@
         </para>
         <para>
             Eine gute Hersteller-unabhängige Dokumentation stellt die
-            <link xl:href="http://www.opengroup.org/onlinepubs/007908799/xcu/sed.html">Open Group</link> bereit.
+            <link xl:href="https://www.opengroup.org/onlinepubs/007908799/xcu/sed.html">Open Group</link> bereit.
         </para>
     </section>
     <section xml:id="sec-intro-doc"><info><title>Dokumentationen</title></info>
@@ -170,13 +170,13 @@
         </para>
         <para>
             Eine Sammlung interessanter Fragen rund um &sed;, inklusive vieler Scripte sowie eine nicht enden wollende
-            Liste von weiterführenden Links findet man auf <link xl:href="http://sed.sourceforge.net/">&sed; $HOME</link>.
+            Liste von weiterführenden Links findet man auf <link xl:href="http://sed.sourceforge.net">&sed; $HOME</link>.
             Besonders hinweisen möchte ich auf die dort enthaltene
             <link xl:href="http://sed.sourceforge.net/sedfaq.html">sedfaq</link> von Eric Pement.
             Das Tutorial von Carlos Jorge Duarte (<link xl:href="http://sed.sourceforge.net/grabbag/tutorials/do_it_with_sed.txt">do it with sed</link>)
             ist sehr lesenswert, besonders wegen der vielen sehr gut dokumentierten und zum Teil trickreichen Scripte.
             Wer keine Dokumentation zu &sed; hat, findet in der Datei eine kurze aber durchaus brauchbare Referenz.
-            Sehr gut ist auch <link xl:href="http://www.tty1.net/stuff/u-sedit2.zip">u-sedit</link> von Mike Arst,
+            Sehr gut ist auch <link xl:href="https://www.tty1.net/stuff/u-sedit2.zip">u-sedit</link> von Mike Arst,
             welches ein Tutorial und jede Menge Beispiele beinhaltet.
         </para>
         <para>
@@ -350,7 +350,7 @@
         Für detailliertere Informationen siehe die man-page <emphasis>regex(7)</emphasis> oder,
         falls nicht vorhanden die man-page zu <emphasis>awk(1)</emphasis>, welche lange Zeit auch als die Referenz für REs galt,
         oder <emphasis>flex(1)</emphasis> oder die
-        <link xl:href="http://www.opengroup.org/onlinepubs/007908799/xbd/re.html">Online-Dokumentation der Open Group</link>.
+        <link xl:href="https://www.opengroup.org/onlinepubs/007908799/xbd/re.html">Online-Dokumentation der Open Group</link>.
         <indexterm><primary>awk</primary></indexterm>
         <indexterm><primary>flex</primary></indexterm>
         <indexterm><primary>Open Group</primary></indexterm>

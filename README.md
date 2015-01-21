@@ -4,14 +4,14 @@ Eine kleine Einführung in sed
 A small introduction in sed (in German language).
 
 This document is released under the
-[Creative Commons Attribution-Share Alike 3.0 Unported License](http://creativecommons.org/licenses/by-sa/3.0/).
+[Creative Commons Attribution-Share Alike 3.0 Unported License](https://creativecommons.org/licenses/by-sa/3.0/).
 
 
 Neue Versionen
 --------------
 
 Die jeweils neueste Version der Einführung in sed kann auf
-[http://www.tty1.net/sed-tutorium_de.html](http://www.tty1.net/sed-tutorium_de.html)
+[http://www.tty1.net/sed-tutorium_de.html](https://www.tty1.net/sed-tutorium_de.html)
 eingesehen werden.
 
 Der Docbook Quellcode ist auf

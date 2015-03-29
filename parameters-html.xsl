@@ -13,6 +13,7 @@
 <xsl:param name="toc.max.depth"         select="4"/>
 <xsl:param name="bridgehead.in.toc"     select="1"/>
 -->
+<xsl:param name="default.table.frame"   select="none"/>
 <xsl:param name="use.id.as.filename"    select="1"/>
 <xsl:param name="html.stylesheet"       select="'style.css'"/>
 <xsl:param name="html.cleanup"          select="1"/>
@@ -23,5 +24,9 @@
 <xsl:param name="html.cellspacing"      select="0"/>
 <xsl:param name="html.cellpadding"      select="2"/>
 -->
+
+<xsl:template name="user.head.content">
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+</xsl:template>
 
 </xsl:stylesheet>

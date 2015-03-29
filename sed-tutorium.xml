@@ -215,7 +215,8 @@
             auf den die RE passt. In diesem Zusammenhang spricht man auch davon, REs sind gefräßig (<emphasis>greedy</emphasis>).
         </para>
         <para>
-        <table xml:id="regex"><info><title>Erweiterte Reguläre Ausdrücke (Extended Regular Expressions)</title></info>
+        <table xml:id="regex">
+        <info><title>Erweiterte Reguläre Ausdrücke (Extended Regular Expressions)</title></info>
         <tgroup cols="2" align="left" colsep="0" rowsep="0">
         <colspec colnum="1" colname="col1" colwidth="1*"/>
         <colspec colnum="2" colname="col2" colwidth="3*"/>
@@ -1579,7 +1580,8 @@ t test
             Diese Dateien werden als ein einziger Input-Stream behandelt.
             Achtung deshalb bei Zeilenangaben. Die Adresse '<literal>1</literal>' gibt deshalb nicht die erste Zeile in jeder Datei an,
             sondern die erste Zeile im Input-Stream; der nachfolgende Befehl wird also nur einmal ausgeführt.
-            <table xml:id="adressen" frame="topbot" pgwide="0"><info><title>Adressen</title></info>
+            <table xml:id="adressen" pgwide="0">
+            <info><title>Adressen</title></info>
             <tgroup cols="2" align="left" colsep="0" rowsep="0">
             <colspec colnum="1" colname="col1" colwidth="1*"/>
             <colspec colnum="2" colname="col2" colwidth="2*"/>
@@ -1626,7 +1628,8 @@ t test
     <section xml:id="sec-vermischtes-kommandos"><info><title>Kommandos</title></info>
         <indexterm><primary>Kommando</primary></indexterm>
         <para>
-            <table xml:id="tbl-allgemeine-kommandos" frame="topbot" pgwide="0"><info><title>Allgemeine Kommandos</title></info>
+            <table xml:id="tbl-allgemeine-kommandos" pgwide="0">
+            <info><title>Allgemeine Kommandos</title></info>
             <tgroup cols="3" align="left" colsep="0" rowsep="0">
             <colspec colnum="1" colname="col1" colwidth="3*"/>
             <colspec colnum="2" colname="col2" colwidth="2*"/>
@@ -1687,7 +1690,8 @@ t test
                 </row>
             </tbody></tgroup></table>
 
-            <table xml:id="tbl-sprung-kommandos" frame="topbot" pgwide="0"><info><title>Sprung-Kommandos</title></info>
+            <table xml:id="tbl-sprung-kommandos" pgwide="0">
+            <info><title>Sprung-Kommandos</title></info>
             <tgroup cols="3" align="left" colsep="0" rowsep="0">
             <colspec colnum="1" colname="col1" colwidth="3*"/>
             <colspec colnum="2" colname="col2" colwidth="2*"/>
@@ -1713,7 +1717,8 @@ t test
                 </row>
             </tbody></tgroup></table>
 
-            <table xml:id="tbl-kommandos-hold-buffer" frame="topbot" pgwide="0"><info><title>Kommandos im Zusammenhang mit dem Hold-buffer</title></info>
+            <table xml:id="tbl-kommandos-hold-buffer" pgwide="0">
+            <info><title>Kommandos im Zusammenhang mit dem Hold-buffer</title></info>
             <tgroup cols="3" align="left" colsep="0" rowsep="0">
             <colspec colnum="1" colname="col1" colwidth="3*"/>
             <colspec colnum="2" colname="col2" colwidth="2*"/>

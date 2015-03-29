@@ -11,7 +11,7 @@ Neue Versionen
 --------------
 
 Die jeweils neueste Version der Einführung in sed kann auf
-[http://www.tty1.net/sed-tutorium_de.html](https://www.tty1.net/sed-tutorium_de.html)
+[https://www.tty1.net/sed-tutorium_de.html](https://www.tty1.net/sed-tutorium_de.html)
 eingesehen werden.
 
 Der Docbook Quellcode ist auf

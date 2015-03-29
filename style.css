@@ -1,5 +1,14 @@
+body {
+    font-size: medium;
+}
+
 pre.programlisting {
     background-color: #e8e8e8;
     border: 1px dashed #aaaaaa;
     padding: 5px;
 }
+
+div.table-contents>table { border-width: 1px; border-spacing: 0px; border-style: solid; border-collapse: collapse; }
+div.table-contents>td { border-width: 1px; border-style: solid; padding: 5px; margin: 0px; }
+div.table-contents>th { border-width: 1px; border-style: solid; padding: 5px; margin: 0px; }
+

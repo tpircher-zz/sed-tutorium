@@ -1,8 +1,9 @@
 <?xml version='1.0' encoding="utf-8"?>
 
-<!DOCTYPE book [
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook V5.1//EN"
+        "http://www.oasis-open.org/docbook/xml/5.0b5/dtd/docbook.dtd" [
         <!ENTITY docversion "1.12">
-        <!ENTITY docdate    "März 2014">
+        <!ENTITY docdate    "2014-03">
 
         <!ENTITY sed        "<command>sed</command>">
         <!ENTITY gnused     "<acronym>GNU</acronym> <command>sed</command>">
@@ -13,15 +14,27 @@
         <!ENTITY holdspace  "<emphasis>hold space</emphasis>">
 ]>
 
-<book xmlns:db="http://docbook.org/ns/docbook" db:version="5.1"
+<book xmlns:db="http://docbook.org/ns/docbook" db:version="5.0b5"
         xmlns:xl="http://www.w3.org/1999/xlink"
         xml:id="sed-tutorium" xml:lang="de">
-<info>
+<bookinfo>
     <title>&sed; Tutorium</title>
     <subtitle>Eine Einführung in &sed;</subtitle>
-    <pubdate>&docdate;, v&docversion;</pubdate>
+    <edition>&docversion;</edition>
+    <pubdate>&docdate;</pubdate>
     <copyright>
-        <year>2001-2014</year>
+        <year>2001</year>
+        <year>2002</year>
+        <year>2003</year>
+        <year>2004</year>
+        <year>2005</year>
+        <year>2007</year>
+        <year>2008</year>
+        <year>2009</year>
+        <year>2010</year>
+        <year>2012</year>
+        <year>2013</year>
+        <year>2014</year>
         <holder>Thomas Pircher</holder>
     </copyright>
 
@@ -53,7 +66,7 @@
         <keyword>Tools</keyword>
         <keyword>Shell Utilities</keyword>
     </keywordset>
-</info>
+</bookinfo>
 
 
 <chapter xml:id="sec-intro"><info><title>Einführung</title></info>
@@ -185,7 +198,7 @@
             Man bekommt dort meistens eine fundierte und ausführliche Antwort - eine treffende Beschreibung des Problems
             und die Befolgung der jeweiligen Netiquette seitens des Fragenden vorausgesetzt.
             Eine zuständige deutschsprachige Newsgruppe könnte beispielsweise
-            <link xl:href="news:de.comp.os.unix.shell">news:de.comp.os.unix.shell</link> sein.
+            <filename>news:de.comp.os.unix.shell</filename> sein.
         </para>
     </section>
 </chapter>

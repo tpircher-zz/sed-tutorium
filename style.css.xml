@@ -1,0 +1,123 @@
+<?xml version="1.0"?>
+<style>
+body {
+    font-size: medium;
+}
+
+pre.programlisting {
+    background-color: #e8e8e8;
+    border: 1px dashed #aaaaaa;
+    padding: 5px;
+}
+
+div.table-contents>table { border-width: 1px; border-spacing: 0px; border-style: solid; border-collapse: collapse; }
+div.table-contents>td { border-width: 1px; border-style: solid; padding: 5px; margin: 0px; }
+div.table-contents>th { border-width: 1px; border-style: solid; padding: 5px; margin: 0px; }
+
+
+/********************************/
+/* start of styles in block.xsl */
+
+.formalpara-title {
+  font-weight: bold;
+}
+
+div.blockquote-title {
+  font-weight: bold;
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+
+span.msgmain-title {
+  font-weight: bold;
+}
+
+span.msgsub-title {
+  font-weight: bold;
+}
+
+span.msgrel-title {
+  font-weight: bold;
+}
+
+div.msglevel, div.msgorig, div.msgaud {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+
+span.msglevel-title, span.msgorig-title, span.msgaud-title {
+  font-weight: bold;
+}
+
+div.msgexplan {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+
+span.msgexplan-title {
+  font-weight: bold;
+}
+
+/* end of styles in block.xsl */
+/********************************/
+
+/********************************/
+/* start of styles in autotoc.xsl */
+
+
+/* end of styles in autotoc.xsl */
+/********************************/
+
+/********************************/
+/* start of styles in formal.xsl */
+
+div.figure-title {
+  font-weight: bold;
+}
+
+div.example-title {
+  font-weight: bold;
+}
+
+div.equation-title {
+  font-weight: bold;
+}
+
+div.table-title {
+  font-weight: bold;
+}
+
+div.sidebar-title {
+  font-weight: bold;
+}
+
+
+/* end of styles in formal.xsl */
+/********************************/
+
+/********************************/
+/* start of styles in verbatim.xsl */
+
+div.programlisting {
+  white-space: pre;
+  font-family: monospace;
+}
+
+div.screen {
+  white-space: pre;
+  font-family: monospace;
+}
+
+div.synopsis {
+  white-space: pre;
+  font-family: monospace;
+}
+
+/* end of styles in verbatim.xsl */
+/********************************/
+
+/* footnote rule */
+hr.footnote-hr {
+  width: 100;
+}
+</style>

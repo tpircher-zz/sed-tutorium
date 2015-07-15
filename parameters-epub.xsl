@@ -1,6 +1,6 @@
 <?xml version='1.0'?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
-<xsl:import href="file:///usr/share/xml/docbook/stylesheet/docbook-xsl/epub/docbook.xsl"/>
+<xsl:import href="file:///usr/share/xml/docbook/stylesheet/docbook-xsl-ns/epub3/chunk.xsl"/>
 
 <xsl:output encoding="UTF-8" indent="no" standalone="no" method="html"/>
 <xsl:param name="chapter.autolabel"     select="1"/>
@@ -13,8 +13,9 @@
 <xsl:param name="toc.max.depth"         select="4"/>
 <xsl:param name="bridgehead.in.toc"     select="1"/>
 -->
+<xsl:param name="default.table.frame"   select="none"/>
 <xsl:param name="use.id.as.filename"    select="1"/>
-<xsl:param name="html.stylesheet"       select="'style.css'"/>
+<xsl:param name="custom.css.source"     select="'style.css.xml'"/>
 <xsl:param name="html.cleanup"          select="1"/>
 <xsl:param name="make.valid.html"       select="1"/>
 <xsl:param name="chunk.section.depth"   select="0"/>

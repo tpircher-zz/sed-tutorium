@@ -167,7 +167,7 @@
             Dieses Tutorium versucht, sich so weit als möglich an die standardisierte Version von &sed; zu halten.
             Dem Autor liegt &gnused; vor, und alle Beispiele wurden damit getestet.
             Im Text wird aber jeweils darauf hingewiesen, wenn Erweiterungen verwendet werden.
-            Auf Pements <link xl:href="http://sed.sourceforge.net/sedfaq.html">sedfaq</link> findet sich eine erschöpfende
+            Auf Pements <link xl:href="http://sed.sf.net/sedfaq.html">sedfaq</link> findet sich eine erschöpfende
             Liste der verschiedenen &sed;-Implementationen und deren Unterschiede.
         </para>
         <para>
@@ -183,13 +183,13 @@
         </para>
         <para>
             Eine Sammlung interessanter Fragen rund um &sed;, inklusive vieler Scripte sowie eine nicht enden wollende
-            Liste von weiterführenden Links findet man auf <link xl:href="http://sed.sourceforge.net">&sed; $HOME</link>.
+            Liste von weiterführenden Links findet man auf <link xl:href="http://sed.sf.net">&sed; $HOME</link>.
             Besonders hinweisen möchte ich auf die dort enthaltene
-            <link xl:href="http://sed.sourceforge.net/sedfaq.html">sedfaq</link> von Eric Pement.
-            Das Tutorial von Carlos Jorge Duarte (<link xl:href="http://sed.sourceforge.net/grabbag/tutorials/do_it_with_sed.txt">do it with sed</link>)
+            <link xl:href="http://sed.sf.net/sedfaq.html">sedfaq</link> von Eric Pement.
+            Das Tutorial von Carlos Jorge Duarte (<link xl:href="http://sed.sf.net/grabbag/tutorials/do_it_with_sed.txt">do it with sed</link>)
             ist sehr lesenswert, besonders wegen der vielen sehr gut dokumentierten und zum Teil trickreichen Scripte.
             Wer keine Dokumentation zu &sed; hat, findet in der Datei eine kurze aber durchaus brauchbare Referenz.
-            Sehr gut ist auch <link xl:href="https://www.tty1.net/stuff/u-sedit2.zip">u-sedit</link> von Mike Arst,
+            Sehr gut ist auch <link xl:href="http://www.pement.org/sed/u-sedit3.zip">u-sedit</link> von Mike Arst,
             welches ein Tutorial und jede Menge Beispiele beinhaltet.
         </para>
         <para>
@@ -812,7 +812,7 @@ sed -e '10q'
         <tip>
             Weil es oft gebraucht wird, stelle ich noch Scripte zur Umwandlung von Dateien im <acronym>DOS</acronym>-Format
             (CR/LF) ins <acronym>UNIX</acronym>-Format (LF) und umgekehrt vor.
-            Sie wurden der schon erwähnten <link xl:href="http://sed.sourceforge.net/sedfaq.html">sedfaq</link> von Eric Pement entnommen.
+            Sie wurden der schon erwähnten <link xl:href="http://sed.sf.net/sedfaq.html">sedfaq</link> von Eric Pement entnommen.
             <indexterm><primary>dos2unix</primary></indexterm>
             <indexterm><primary>unix2dos</primary></indexterm>
 <programlisting># 3. Under UNIX: convert DOS newlines (CR/LF) to Unix format
@@ -1555,7 +1555,7 @@ t test
         </para>
         <para>
             Diesen Trick verdanke ich Carlos Duarte - ein weiterer Anreiz, in sein
-            <link xl:href="http://sed.sourceforge.net/grabbag/tutorials/do_it_with_sed.txt">sed tutorial</link> hineinzuschauen.
+            <link xl:href="http://sed.sf.net/grabbag/tutorials/do_it_with_sed.txt">sed tutorial</link> hineinzuschauen.
         </para>
     </section>
 

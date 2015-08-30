@@ -5,7 +5,7 @@ xslfo   = parameters-fo.xsl
 outdir  = out
 src     = sed-tutorium.xml
 
-all: html chnk epub
+all: html chnk epub pdf
 
 html: $(outdir) $(outdir)/sed-tutorium.html
 chnk: $(outdir) $(outdir)/index.html

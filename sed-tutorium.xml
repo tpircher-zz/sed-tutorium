@@ -3,7 +3,7 @@
 <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook V5.1//EN"
         "http://www.oasis-open.org/docbook/xml/5.0b5/dtd/docbook.dtd" [
         <!ENTITY docversion "1.12">
-        <!ENTITY docdate    "2014-03">
+        <!ENTITY docdate    "2014-03-12">
 
         <!ENTITY sed        "<command>sed</command>">
         <!ENTITY gnused     "<acronym>GNU</acronym> <command>sed</command>">

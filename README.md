@@ -34,4 +34,4 @@ Der Befehl 'make all' generiert die HTML Dateien, das epub- und das PDF File im 
 Feedback
 --------
 
-Bitte gern und zwar an <tehpeh-sed@tty1.net>.
+Bitte gern und zwar an <tehpeh-web@tty1.net>.

@@ -2,8 +2,8 @@
 
 <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook V5.1//EN"
         "http://www.oasis-open.org/docbook/xml/5.0b5/dtd/docbook.dtd" [
-        <!ENTITY docversion "1.14">
-        <!ENTITY docdate    "2016-11-10">
+        <!ENTITY docversion "1.15">
+        <!ENTITY docdate    "2017-08-03">
 
         <!ENTITY sed        "<command>sed</command>">
         <!ENTITY gnused     "<acronym>GNU</acronym> <command>sed</command>">
@@ -36,6 +36,7 @@
         <year>2013</year>
         <year>2014</year>
         <year>2016</year>
+        <year>2017</year>
         <holder>Thomas Pircher</holder>
     </copyright>
 
@@ -439,7 +440,7 @@
                     Aber es geht auch einfach mit &sed;. Das folgende Script-Gerüst schreibt alle Zeilen, auf die ein regulärer Ausdruck
                     passt, auf den Bildschirm (der String 'RE' muss durch den gewünschten regulären Ausdruck ersetzt werden):
                     <programlisting>sed -ne '/RE/p'</programlisting>
-                    Wenn man 'interaktiv' mit &sed; arbeitet, also wenn Ein- und Ausgabe mit Tastatur und Bildschirm erfolgen (so wie im obigen Beispiel),
+                    Wenn man 'interaktiv' mit &sed; arbeitet, also wenn Ein- und Ausgabe über Tastatur und Bildschirm erfolgen (so wie im obigen Beispiel),
                     dann sieht man sowohl Eingabe als auch Ausgabe auf dem Bildschirm.
                     Das bedeutet, dass Zeilen, die nicht auf die RE passen, einmal am Bildschirm auftauchen (als Eingabe).
                     Zeilen die hingegen auf die RE passen, erscheinen zweimal (einmal als Eingabe, einmal als Ausgabe).
@@ -1812,6 +1813,12 @@ t test
 
 <chapter xml:id="sec-history"><info><title>Versionsgeschichte</title></info>
     <revhistory>
+        <revision>
+            <revnumber>1.15</revnumber>
+            <date>2017-08-03</date>
+            <authorinitials>thp</authorinitials>
+            <revremark>Viele Korrekturen der Rechtschreibung, Zeichensetzung und bessere Beschreibungen der 'D' und 'N' Befehle. Vielen Dank an Robin Klose.</revremark>
+        </revision>
         <revision>
             <revnumber>1.14</revnumber>
             <date>2016-11-10</date>

@@ -114,7 +114,7 @@
         </para>
         <indexterm><primary>Regular Expression</primary></indexterm>
         <para>
-            Ganz nebenbei lernt man durch die Beschäftigung mit &sed; eine ganze Menge über Reguläre Ausdrücke
+            Ganz nebenbei lernt man durch die Beschäftigung mit &sed; eine ganze Menge über reguläre Ausdrücke
             (Regular Expressions),
             die grundlegenden Prinzipien von <acronym>UNIX</acronym>
             und einige kleine Tricks, welche in anderen Programmen wie <command>vim</command> sehr nützlich sind.
@@ -219,7 +219,7 @@
             Es ist zum Beispiel einfacher, die <emphasis>natürlichen Zahlen</emphasis> als "eine Zeichenkette,
             bestehend aus einer oder mehreren Ziffern aus der Menge {0,1,2,3,4,5,6,7,8,9}" zu definieren,
             als alle Zahlen von 0 bis unendlich aufzuzählen.
-            Mit Hilfe von Regulären Ausdrücken kann man solche Klassen von Strings eindeutig beschreiben.
+            Mit Hilfe von regulären Ausdrücken kann man solche Klassen von Strings eindeutig beschreiben.
         </para>
         <para>
             Man sagt eine RE passt auf eine Zeichenkette, wenn diese in der von der RE umrissenen Klasse enthalten ist.
@@ -374,7 +374,7 @@
         <section xml:id="sec-grundlagen-bre"><info><title>Basic Regular Expressions</title></info>
             <indexterm><primary>Regular Expression</primary><secondary>Basic Regular Expression</secondary></indexterm>
             <para>&sed; verwendet <emphasis>Basic</emphasis> Regular Expressions, eine Art Untermenge der oben vorgestellten
-            Erweiterten Regulären Ausdrücke. Die Unterschiede zu den Erweiterten Regulären Ausdrücken sind:
+            erweiterten regulären Ausdrücke. Die Unterschiede zu den erweiterten regulären Ausdrücken sind:
             <itemizedlist>
                 <listitem>
                     <para>
@@ -434,10 +434,10 @@
 
             <tip>
                 <para>
-                    Eine Reihe von Programmen helfen die ersten Experimente mit Regulären Ausdrücken zu erleichtern.
+                    Eine Reihe von Programmen helfen die ersten Experimente mit regulären Ausdrücken zu erleichtern.
                     pcretest (enthalten in der PCRE library) ist eines davon, oder kregexpeditor, mit grafischer Benutzeroberfläche für KDE.
-                    Aber es geht auch einfach mit &sed;. Das folgende Script-Gerüst schreibt alle Zeilen, auf die ein Regulärer Ausdruck
-                    passt, auf den Bildschirm (der String 'RE' muss durch den gewünschten Regulären Ausdruck ersetzt werden):
+                    Aber es geht auch einfach mit &sed;. Das folgende Script-Gerüst schreibt alle Zeilen, auf die ein regulärer Ausdruck
+                    passt, auf den Bildschirm (der String 'RE' muss durch den gewünschten regulären Ausdruck ersetzt werden):
                     <programlisting>sed -ne '/RE/p'</programlisting>
                     Wenn man 'interaktiv' mit &sed; arbeitet, also wenn Ein- und Ausgabe mit Tastatur und Bildschirm erfolgen (so wie im obigen Beispiel),
                     dann sieht man sowohl Eingabe als auch Ausgabe auf dem Bildschirm.
@@ -583,7 +583,7 @@ cat /etc/passwd | sed -n -e '/root/p'
         </para>
         <note>
             Die zeilenorientierte Arbeitsweise von &sed; eignet sich sehr gut, um Texte zu bearbeiten.
-            Binäre Daten werden kaum mit &sed; bearbeitet, da sie sich nur umständlich als Reguläre Ausdrücke
+            Binäre Daten werden kaum mit &sed; bearbeitet, da sie sich nur umständlich als reguläre Ausdrücke
             angeben lassen und weil je nach Beschaffenheit der Eingabe-Daten sehr große Blöcke in den &patspace;
             geladen werden müssen.
         </note>
@@ -599,7 +599,7 @@ cat /etc/passwd | sed -n -e '/root/p'
         </para>
         <para>
             Eine Adresse ist zum Beispiel eine fixe Zeilennummer in der Eingabe oder ganze Bereiche, oder aber Zeilen,
-            die auf einen bestimmten Regulären Ausdruck passen.
+            die auf einen bestimmten regulären Ausdruck passen.
             <programlisting>sed -e '1d' /etc/services</programlisting>Hier wird das Kommando
             '<literal>d</literal>' auf die Zeile mit der Adresse '1' angewendet.
             Der Effekt des Programms ist der, dass die erste Zeile von
@@ -627,7 +627,7 @@ cat /etc/passwd | sed -n -e '/root/p'
             Das kann mit folgender Zeile geschehen:
             <programlisting>sed -e '/^#.*/d' /etc/inetd</programlisting>
             Die Adresse <literal>/re/</literal> wendet das nachfolgende &sed;-Kommando auf jede Zeile an,
-            auf die der Reguläre Ausdruck <emphasis>re</emphasis> passt.
+            auf die der reguläre Ausdruck <emphasis>re</emphasis> passt.
             Nur zur Erinnerung - die angegebene RE passt auf jede Zeile, welche "mit einem '<literal>#</literal>' beginnt und danach null oder
             mehr beliebige Zeichen enthält".
             Das ist aber nicht das, was wir eigentlich wollten. Denn enthält die Datei eine leere Zeile, dann wird diese auch ausgegeben.
@@ -904,7 +904,7 @@ C:\> sed -n p file                        # method 2
         </para>
         <indexterm><primary>Regular Expression</primary><secondary>Grenzen von</secondary></indexterm>
         <para>
-            Hier weise ich noch einmal auf die Grenzen von Regulären Ausdrücken hin.
+            Hier weise ich noch einmal auf die Grenzen von regulären Ausdrücken hin.
             Es ist nicht möglich, die Rücktransformation aus der <emphasis>elleff</emphasis>-Sprache mit REs auszudrücken.
             Ein <literal>[aeiou]l[aeiou]f[aeiou]</literal> kann man wohl angeben, nicht aber die Bedingung, dass alle drei
             Vokale gleich sein müssen.
@@ -1362,7 +1362,7 @@ Meinst du?
             nur auf die aktuelle Zeile angewandt. Der gewünschte Effekt wird mit
             <programlisting>%s/bla/blubb/g</programlisting> erreicht.
             Ein anderes neues Kommando ist <literal>g/re/command</literal>.
-            Es wendet das Kommando auf alle jene Zeilen an, auf welche der Reguläre Ausdruck 're' passt.
+            Es wendet das Kommando auf alle jene Zeilen an, auf welche der reguläre Ausdruck 're' passt.
             Ein Beispiel dafür ist <literal>g/re/p</literal>, welche alle Zeilen ausgibt, welche auf die RE passen.
         </para>
         <indexterm><primary>grep</primary></indexterm>

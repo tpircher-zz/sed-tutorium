@@ -1047,20 +1047,35 @@ versuch\tmich zu haschen\307\203 $
         <indexterm><primary>Kommando</primary><secondary>P</secondary></indexterm>
         <para>
             &sed; kennt noch weitere Kommandos zur Manipulation des &patspace;.
-            Das Kommando '<literal>D</literal>' löscht den Inhalt des &patspace; bis zum ersten Newline.
-            Ist darin anschließend noch Text enthalten, wird ein neuer Zyklus gestartet, <emphasis>ohne</emphasis>
-            eine neue Input-Zeile einzulesen.
-            Ist der &patspace; hingegen leer, beginnt ein normaler Zyklus.
+            Das Kommando '<literal>D</literal>' startet einen neuen Zyklus - wie das Kommando '<literal>d</literal>',
+            wenn der Inhalt des &patspace; kein Newline enthält.
+            Falls der &patspace; allerdings ein Newline enthält, wird der Inhalt des &patspace; bis einschließlich
+            zum ersten Newline gelöscht, und danach ein neuer Zyklus mit dem verbleibenden &patspace; gestartet,
+            <emphasis>ohne</emphasis> eine weitere Zeile von der Eingabe zu lesen.
             Das Kommando '<literal>N</literal>' hängt ein Newline an den Inhalt des &patspace;,
             liest eine neue Zeile ein, welche nach dem Newline eingefügt wird.
-            Kann keine neue Zeile mehr eingelesen werden (Dateiende) dann wird das Programm an dieser Stelle abgebrochen.
+            Kann keine neue Zeile mehr eingelesen werden (Dateiende), dann wird das Programm an dieser Stelle abgebrochen.
             Das Kommando '<literal>P</literal>' gibt den Inhalt des &patspace; bis zum ersten Newline aus.
         </para>
         <indexterm><primary>Kommando</primary><secondary>\n</secondary></indexterm>
         <para>
-            Das Beispiel dazu löscht alle <emphasis>konsekutiven</emphasis> Leerzeilen in einer Datei.
+            Das folgende Beispiel löscht alle <emphasis>konsekutiven</emphasis> Leerzeilen in einer Datei.
             Ist am Dateianfang eine Leerzeile, so bleibt sie erhalten; am Dateiende werden alle Leerzeilen gelöscht.
             <programlisting>sed -e '/^$/N;/\n$/D'</programlisting>
+            Dieses Beispielprogramm arbeitet wie folgt: Ist die erste Zeile der Eingabe leer, trifft die erste Adresse
+            des Programms zu und das Kommando '<literal>N</literal>' fügt in den &patspace; ein Newline gefolgt von der
+            zweiten Zeile der Eingabe ein. Ist auch diese zweite Zeile der Eingabe leer, befindet sich im &patspace; nur
+            das Newline, sonst nichts. In diesem Fall trifft anschließend die zweite Adresse zu, sodass
+            das Kommando '<literal>D</literal>' das Newline aus dem &patspace; löscht und einen neuen Zyklus mit dem
+            bestehenden (leeren) &patspace; startet, also ohne zu Beginn die nächste Zeile von der Eingabe einzulesen.
+            Nun trifft die erste Adresse wieder zu, woraufhin wieder ein Newline gefolgt von der nächsten Eingabezeile in
+            den &patspace; geladen wird. Sobald eine Eingabezeile nicht leer ist, wird sie also hinter dem Newline eingefügt.
+            Wenn dies passiert, trifft die zweite Adresse allerdings nicht mehr zu. In diesem Fall wird schließlich
+            ein einziges Newline gefolgt von der nicht-leeren Eingabezeile ausgegeben. Danach wird ein neuer Zyklus gestartet.
+            Ist zu Beginn eines Zyklus die Eingabezeile nicht leer, trifft weder die erste noch die zweite Adresse zu und
+            der &patspace; wird unverändert ausgegeben. Danach startet wieder der nächste Zyklus. Somit werden alle
+            konsekutiven Leerzeilen vor einer nicht-leeren Zeile zu einer einzigen Leerzeile reduziert, während alle
+            nicht-leeren Zeilen unverändert erhalten bleiben.
         </para>
     </section>
 

@@ -1019,7 +1019,7 @@ s/..*/name: &amp;/
         <para>
             Gelegentlich will ein Script einfach nicht funktionieren, und man verbringt Stunden damit, zu rätseln,
             warum eine RE partout nicht auf eine Zeile passen will.
-            Manchmal liegt das an der Eingabe-Datei, nämlich wenn sie Zeichen enthält, die man sich nicht erwartet.
+            Manchmal liegt das an der Eingabe-Datei, nämlich wenn sie Zeichen enthält, die man nicht erwartet.
             In solchen Fällen ist das Kommando '<literal>l</literal>' nützlich.
             Es gibt den &patspace; in einer eindeutigen Schreibweise (welche an <acronym>ANSI C</acronym> angelehnt ist)
             auf den Bildschirm:

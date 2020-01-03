@@ -94,7 +94,7 @@
         </para>
         <para>
             Die hier vorgestellten Scripte wurden in der Regel getestet, doch kann ich nicht ausschließen,
-            dass sich doch hie und da einige Fehler eingeschlichen haben
+            dass sich doch hier und da einige Fehler eingeschlichen haben.
             In diesem Fall bitte nicht meckern sondern melden. Für Fragen stehe ich gerne zur Verfügung.
             Einfach eine E-Mail an die auf der ersten Seite angegebene Adresse schicken und in der Betreff-Zeile
             '<emphasis>sed-tutorium</emphasis>' unterbringen.
@@ -1019,7 +1019,7 @@ s/..*/name: &amp;/
         <para>
             Gelegentlich will ein Script einfach nicht funktionieren, und man verbringt Stunden damit, zu rätseln,
             warum eine RE partout nicht auf eine Zeile passen will.
-            Manchmal liegt das an der Eingabe-Datei, nämlich wenn sie Zeichen enthält, die man sich nicht erwartet.
+            Manchmal liegt das an der Eingabe-Datei, nämlich wenn sie Zeichen enthält, die man nicht erwartet.
             In solchen Fällen ist das Kommando '<literal>l</literal>' nützlich.
             Es gibt den &patspace; in einer eindeutigen Schreibweise (welche an <acronym>ANSI C</acronym> angelehnt ist)
             auf den Bildschirm:
@@ -1518,7 +1518,7 @@ t test
         <para>
             Ist das erste Zeichen eines Lesevorganges also ein '<literal>o</literal>', dann könnte
             diesem '<literal>o</literal>' gleich eine ganze Folge weiterer '<literal>o</literal>'s folgen.
-            Man muss also einen Ausdruck der Form <literal>o\+</literal> einlesen, und zwar solange,
+            Man muss also einen Ausdruck der Form <literal>o\+</literal> einlesen, und zwar so lange,
             bis man endlich ein Zeichen findet, das sich von '<literal>o</literal>' unterscheidet.
             Ist dann dieses Zeichen nicht nur von '<literal>o</literal>', sondern auch von '<literal>k</literal>'
             verschieden, dann hat man insgesamt einen Ausdruck der Form <literal>o\+[^ok]</literal> eingelesen:
@@ -1532,7 +1532,7 @@ t test
         </para>
         <para>
             Bei jedem Lesevorgang findet man also ein einzelnes Zeichen <literal>[^o]</literal> oder einen Ausdruck
-            <literal>o\+[^ok]</literal>. Erst wenn eine '<literal>o</literal>-Folge" mit dem Zeichen '<literal>k</literal>' endet,
+            <literal>o\+[^ok]</literal>. Erst wenn eine '<literal>o</literal>-Folge' mit dem Zeichen '<literal>k</literal>' endet,
             wenn man also auf den "Abschluss" <literal>o\+k</literal> trifft, ist man am Ende.
         </para>
         <para>

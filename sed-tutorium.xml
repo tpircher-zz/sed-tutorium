@@ -1532,7 +1532,7 @@ t test
         </para>
         <para>
             Bei jedem Lesevorgang findet man also ein einzelnes Zeichen <literal>[^o]</literal> oder einen Ausdruck
-            <literal>o\+[^ok]</literal>. Erst wenn eine '<literal>o</literal>-Folge" mit dem Zeichen '<literal>k</literal>' endet,
+            <literal>o\+[^ok]</literal>. Erst wenn eine '<literal>o</literal>-Folge' mit dem Zeichen '<literal>k</literal>' endet,
             wenn man also auf den "Abschluss" <literal>o\+k</literal> trifft, ist man am Ende.
         </para>
         <para>

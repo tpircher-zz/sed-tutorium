@@ -1518,7 +1518,7 @@ t test
         <para>
             Ist das erste Zeichen eines Lesevorganges also ein '<literal>o</literal>', dann könnte
             diesem '<literal>o</literal>' gleich eine ganze Folge weiterer '<literal>o</literal>'s folgen.
-            Man muss also einen Ausdruck der Form <literal>o\+</literal> einlesen, und zwar solange,
+            Man muss also einen Ausdruck der Form <literal>o\+</literal> einlesen, und zwar so lange,
             bis man endlich ein Zeichen findet, das sich von '<literal>o</literal>' unterscheidet.
             Ist dann dieses Zeichen nicht nur von '<literal>o</literal>', sondern auch von '<literal>k</literal>'
             verschieden, dann hat man insgesamt einen Ausdruck der Form <literal>o\+[^ok]</literal> eingelesen:

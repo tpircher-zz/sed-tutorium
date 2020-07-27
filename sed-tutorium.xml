@@ -519,7 +519,7 @@
         <para>
             &sed; liest gewöhnlich von &stdin; (standard input, normalerweise die Tastatur)
             und schreibt auf &stdout; (standard output, normalerweise der Bildschirm).
-            Man kann aber nach den Kommandozeilen Optionen einen (oder mehrere) Dateinamen angeben,
+            Man kann aber nach den Kommandozeilenoptionen einen (oder mehrere) Dateinamen angeben,
             von dem die Eingabe gelesen werden soll.
             Weiters kann man sich der <emphasis>Umleite-Operatoren</emphasis> der Shell bedienen
             (<literal>&gt;</literal>, <literal>&lt;</literal>, <literal>|</literal>).
